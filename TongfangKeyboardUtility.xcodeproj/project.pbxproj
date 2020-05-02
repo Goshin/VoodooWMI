@@ -1,0 +1,525 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		758A37232448D48B00BD98C0 /* KernEventServer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 758A37222448D48B00BD98C0 /* KernEventServer.hpp */; };
+		758A37252448D78500BD98C0 /* KernEventServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 758A37242448D78500BD98C0 /* KernEventServer.cpp */; };
+		7596CF5A2448AC9400333C46 /* TongfangKeyboardUtility.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7596CF592448AC9400333C46 /* TongfangKeyboardUtility.hpp */; };
+		7596CF5C2448AC9400333C46 /* TongfangKeyboardUtility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7596CF5B2448AC9400333C46 /* TongfangKeyboardUtility.cpp */; };
+		75D7CCA3244A5D1D003CDA27 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 75D7CCA2244A5D1D003CDA27 /* main.m */; };
+		75D7CCAC244A5E77003CDA27 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75D7CCAB244A5E77003CDA27 /* AppKit.framework */; };
+		75D7CCAE244A5E7E003CDA27 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75D7CCAD244A5E7E003CDA27 /* CoreServices.framework */; };
+		75D7CCB0244A5E85003CDA27 /* CoreWLAN.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75D7CCAF244A5E85003CDA27 /* CoreWLAN.framework */; };
+		75D7CCB2244A5E95003CDA27 /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75D7CCB1244A5E95003CDA27 /* IOBluetooth.framework */; };
+		75F35B8A245D276600DD127F /* DSDT-Patch in Copy Files */ = {isa = PBXBuildFile; fileRef = 75D7CCB4244A5FC2003CDA27 /* DSDT-Patch */; };
+		75F35B8B245D277100DD127F /* install_daemon.sh in Copy Files */ = {isa = PBXBuildFile; fileRef = 75D7CCB5244A5FC2003CDA27 /* install_daemon.sh */; };
+		75F35B8C245D277100DD127F /* uninstall_daemon.sh in Copy Files */ = {isa = PBXBuildFile; fileRef = 7537E722245B6EA900E127AB /* uninstall_daemon.sh */; };
+		75F35B8D245D277100DD127F /* io.github.goshin.TongfangFnDaemon.plist in Copy Files */ = {isa = PBXBuildFile; fileRef = 7537E720245B67E000E127AB /* io.github.goshin.TongfangFnDaemon.plist */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		75D7CCA7244A5DEA003CDA27 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7596CF4D2448AC9400333C46 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 75D7CC9F244A5D1D003CDA27;
+			remoteInfo = TongfangFnDaemon;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		75F35B89245D274200DD127F /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				75F35B8B245D277100DD127F /* install_daemon.sh in Copy Files */,
+				75F35B8C245D277100DD127F /* uninstall_daemon.sh in Copy Files */,
+				75F35B8D245D277100DD127F /* io.github.goshin.TongfangFnDaemon.plist in Copy Files */,
+				75F35B8A245D276600DD127F /* DSDT-Patch in Copy Files */,
+			);
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		7537E720245B67E000E127AB /* io.github.goshin.TongfangFnDaemon.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = io.github.goshin.TongfangFnDaemon.plist; sourceTree = "<group>"; };
+		7537E722245B6EA900E127AB /* uninstall_daemon.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = uninstall_daemon.sh; sourceTree = "<group>"; };
+		758A37222448D48B00BD98C0 /* KernEventServer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KernEventServer.hpp; sourceTree = "<group>"; };
+		758A37242448D78500BD98C0 /* KernEventServer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KernEventServer.cpp; sourceTree = "<group>"; };
+		7596CF562448AC9400333C46 /* TongfangKeyboardUtility.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TongfangKeyboardUtility.kext; sourceTree = BUILT_PRODUCTS_DIR; };
+		7596CF592448AC9400333C46 /* TongfangKeyboardUtility.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TongfangKeyboardUtility.hpp; sourceTree = "<group>"; };
+		7596CF5B2448AC9400333C46 /* TongfangKeyboardUtility.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TongfangKeyboardUtility.cpp; sourceTree = "<group>"; };
+		7596CF5D2448AC9400333C46 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75D7CCA0244A5D1D003CDA27 /* TongfangFnDaemon */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TongfangFnDaemon; sourceTree = BUILT_PRODUCTS_DIR; };
+		75D7CCA2244A5D1D003CDA27 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		75D7CCA9244A5E3C003CDA27 /* OSD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSD.h; sourceTree = "<group>"; };
+		75D7CCAB244A5E77003CDA27 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		75D7CCAD244A5E7E003CDA27 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		75D7CCAF244A5E85003CDA27 /* CoreWLAN.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreWLAN.framework; path = System/Library/Frameworks/CoreWLAN.framework; sourceTree = SDKROOT; };
+		75D7CCB1244A5E95003CDA27 /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
+		75D7CCB3244A5F52003CDA27 /* BezelServices.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BezelServices.h; sourceTree = "<group>"; };
+		75D7CCB4244A5FC2003CDA27 /* DSDT-Patch */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "DSDT-Patch"; sourceTree = "<group>"; };
+		75D7CCB5244A5FC2003CDA27 /* install_daemon.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = install_daemon.sh; sourceTree = "<group>"; };
+		75D7CCBC244A68A6003CDA27 /* libpthread.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpthread.tbd; path = usr/lib/libpthread.tbd; sourceTree = SDKROOT; };
+		75D7CCBD244A690E003CDA27 /* Kernel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kernel.framework; path = System/Library/Frameworks/Kernel.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7596CF532448AC9400333C46 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75D7CC9D244A5D1D003CDA27 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75D7CCB0244A5E85003CDA27 /* CoreWLAN.framework in Frameworks */,
+				75D7CCAC244A5E77003CDA27 /* AppKit.framework in Frameworks */,
+				75D7CCAE244A5E7E003CDA27 /* CoreServices.framework in Frameworks */,
+				75D7CCB2244A5E95003CDA27 /* IOBluetooth.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7596CF4C2448AC9400333C46 = {
+			isa = PBXGroup;
+			children = (
+				75D7CCB4244A5FC2003CDA27 /* DSDT-Patch */,
+				7596CF582448AC9400333C46 /* TongfangKeyboardUtility */,
+				75D7CCA1244A5D1D003CDA27 /* TongfangFnDaemon */,
+				7596CF572448AC9400333C46 /* Products */,
+				75D7CCAA244A5E76003CDA27 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		7596CF572448AC9400333C46 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7596CF562448AC9400333C46 /* TongfangKeyboardUtility.kext */,
+				75D7CCA0244A5D1D003CDA27 /* TongfangFnDaemon */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7596CF582448AC9400333C46 /* TongfangKeyboardUtility */ = {
+			isa = PBXGroup;
+			children = (
+				758A37242448D78500BD98C0 /* KernEventServer.cpp */,
+				758A37222448D48B00BD98C0 /* KernEventServer.hpp */,
+				7596CF592448AC9400333C46 /* TongfangKeyboardUtility.hpp */,
+				7596CF5B2448AC9400333C46 /* TongfangKeyboardUtility.cpp */,
+				7596CF5D2448AC9400333C46 /* Info.plist */,
+			);
+			path = TongfangKeyboardUtility;
+			sourceTree = "<group>";
+		};
+		75D7CCA1244A5D1D003CDA27 /* TongfangFnDaemon */ = {
+			isa = PBXGroup;
+			children = (
+				75D7CCB7244A6015003CDA27 /* misc */,
+				75D7CCA2244A5D1D003CDA27 /* main.m */,
+				75D7CCA9244A5E3C003CDA27 /* OSD.h */,
+				75D7CCB3244A5F52003CDA27 /* BezelServices.h */,
+			);
+			path = TongfangFnDaemon;
+			sourceTree = "<group>";
+		};
+		75D7CCAA244A5E76003CDA27 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				75D7CCBD244A690E003CDA27 /* Kernel.framework */,
+				75D7CCBC244A68A6003CDA27 /* libpthread.tbd */,
+				75D7CCB1244A5E95003CDA27 /* IOBluetooth.framework */,
+				75D7CCAF244A5E85003CDA27 /* CoreWLAN.framework */,
+				75D7CCAD244A5E7E003CDA27 /* CoreServices.framework */,
+				75D7CCAB244A5E77003CDA27 /* AppKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		75D7CCB7244A6015003CDA27 /* misc */ = {
+			isa = PBXGroup;
+			children = (
+				75D7CCB5244A5FC2003CDA27 /* install_daemon.sh */,
+				7537E722245B6EA900E127AB /* uninstall_daemon.sh */,
+				7537E720245B67E000E127AB /* io.github.goshin.TongfangFnDaemon.plist */,
+			);
+			path = misc;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		7596CF512448AC9400333C46 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				758A37232448D48B00BD98C0 /* KernEventServer.hpp in Headers */,
+				7596CF5A2448AC9400333C46 /* TongfangKeyboardUtility.hpp in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		7596CF552448AC9400333C46 /* TongfangKeyboardUtility */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7596CF602448AC9400333C46 /* Build configuration list for PBXNativeTarget "TongfangKeyboardUtility" */;
+			buildPhases = (
+				7596CF512448AC9400333C46 /* Headers */,
+				7596CF522448AC9400333C46 /* Sources */,
+				7596CF532448AC9400333C46 /* Frameworks */,
+				7596CF542448AC9400333C46 /* Resources */,
+				75F35B87245D0C0700DD127F /* Linting */,
+				75F35B88245D26DC00DD127F /* Build DSDT Patch */,
+				75F35B89245D274200DD127F /* Copy Files */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				75D7CCA8244A5DEA003CDA27 /* PBXTargetDependency */,
+			);
+			name = TongfangKeyboardUtility;
+			productName = TongfangKeyboardUtility;
+			productReference = 7596CF562448AC9400333C46 /* TongfangKeyboardUtility.kext */;
+			productType = "com.apple.product-type.kernel-extension";
+		};
+		75D7CC9F244A5D1D003CDA27 /* TongfangFnDaemon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 75D7CCA6244A5D1D003CDA27 /* Build configuration list for PBXNativeTarget "TongfangFnDaemon" */;
+			buildPhases = (
+				75D7CC9C244A5D1D003CDA27 /* Sources */,
+				75D7CC9D244A5D1D003CDA27 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TongfangFnDaemon;
+			productName = TongfangFnDaemon;
+			productReference = 75D7CCA0244A5D1D003CDA27 /* TongfangFnDaemon */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7596CF4D2448AC9400333C46 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1140;
+				TargetAttributes = {
+					7596CF552448AC9400333C46 = {
+						CreatedOnToolsVersion = 11.4;
+					};
+					75D7CC9F244A5D1D003CDA27 = {
+						CreatedOnToolsVersion = 11.4.1;
+					};
+				};
+			};
+			buildConfigurationList = 7596CF502448AC9400333C46 /* Build configuration list for PBXProject "TongfangKeyboardUtility" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 7596CF4C2448AC9400333C46;
+			productRefGroup = 7596CF572448AC9400333C46 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7596CF552448AC9400333C46 /* TongfangKeyboardUtility */,
+				75D7CC9F244A5D1D003CDA27 /* TongfangFnDaemon */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7596CF542448AC9400333C46 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		75F35B87245D0C0700DD127F /* Linting */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Linting;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncpplint --recursive --filter=-build/header_guard,-whitespace/line_length,-runtime/int,-readability/casting,-legal/copyright --extensions=h,c,hpp,cpp,m ./\ncpplint --filter=-whitespace/line_length,-legal/copyright,-whitespace/braces,-whitespace/parens --extensions=dsl ./DSDT-Patch/SSDT-FN.dsl\n";
+		};
+		75F35B88245D26DC00DD127F /* Build DSDT Patch */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build DSDT Patch";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "rm ./DSDT-Patch/SSDT-FN.aml\niasl ./DSDT-Patch/SSDT-FN.dsl\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7596CF522448AC9400333C46 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7596CF5C2448AC9400333C46 /* TongfangKeyboardUtility.cpp in Sources */,
+				758A37252448D78500BD98C0 /* KernEventServer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75D7CC9C244A5D1D003CDA27 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75D7CCA3244A5D1D003CDA27 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		75D7CCA8244A5DEA003CDA27 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 75D7CC9F244A5D1D003CDA27 /* TongfangFnDaemon */;
+			targetProxy = 75D7CCA7244A5DEA003CDA27 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		7596CF5E2448AC9400333C46 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		7596CF5F2448AC9400333C46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		7596CF612448AC9400333C46 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1.0.0d1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = TongfangKeyboardUtility/Info.plist;
+				MODULE_NAME = io.github.goshin.TongfangKeyboardUtility;
+				MODULE_VERSION = 1.0.0d1;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.goshin.TongfangKeyboardUtility;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				WRAPPER_EXTENSION = kext;
+			};
+			name = Debug;
+		};
+		7596CF622448AC9400333C46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1.0.0d1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = TongfangKeyboardUtility/Info.plist;
+				MODULE_NAME = io.github.goshin.TongfangKeyboardUtility;
+				MODULE_VERSION = 1.0.0d1;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.goshin.TongfangKeyboardUtility;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				WRAPPER_EXTENSION = kext;
+			};
+			name = Release;
+		};
+		75D7CCA4244A5D1D003CDA27 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		75D7CCA5244A5D1D003CDA27 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7596CF502448AC9400333C46 /* Build configuration list for PBXProject "TongfangKeyboardUtility" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7596CF5E2448AC9400333C46 /* Debug */,
+				7596CF5F2448AC9400333C46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7596CF602448AC9400333C46 /* Build configuration list for PBXNativeTarget "TongfangKeyboardUtility" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7596CF612448AC9400333C46 /* Debug */,
+				7596CF622448AC9400333C46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		75D7CCA6244A5D1D003CDA27 /* Build configuration list for PBXNativeTarget "TongfangFnDaemon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75D7CCA4244A5D1D003CDA27 /* Debug */,
+				75D7CCA5244A5D1D003CDA27 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7596CF4D2448AC9400333C46 /* Project object */;
+}

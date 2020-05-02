@@ -1,0 +1,56 @@
+//
+//  KernEventServer.cpp
+//  KernEventServer
+//  mainly from AsusSMC (MIT License)
+//  Copyright © 2018-2019 Le Bao Hiep. All rights reserved.
+//
+
+#include "KernEventServer.hpp"
+
+bool TongfangKeyboardUtilityKernEventServer::setVendorID(const char *vendorCode) {
+    if (KERN_SUCCESS != kev_vendor_code_find(vendorCode, &vendorID)) {
+        return false;
+    }
+    return true;
+}
+
+void TongfangKeyboardUtilityKernEventServer::setEventCode(uint32_t code) {
+    eventCode = code;
+}
+
+bool TongfangKeyboardUtilityKernEventServer::sendMessage(int type, int x, int y) {
+    // kernel event message
+    struct kev_msg kEventMsg = {0};
+
+    // zero out kernel message
+    bzero(&kEventMsg, sizeof(struct kev_msg));
+
+    // set vendor code
+    kEventMsg.vendor_code = vendorID;
+
+    // set class
+    kEventMsg.kev_class = KEV_ANY_CLASS;
+
+    // set subclass
+    kEventMsg.kev_subclass = KEV_ANY_SUBCLASS;
+
+    // set event code
+    kEventMsg.event_code = eventCode;
+
+    // type
+    kEventMsg.dv[0].data_length = sizeof(int);
+    kEventMsg.dv[0].data_ptr = &type;
+
+    // x
+    kEventMsg.dv[1].data_length = sizeof(int);
+    kEventMsg.dv[1].data_ptr = &x;
+
+    // y
+    kEventMsg.dv[2].data_length = sizeof(int);
+    kEventMsg.dv[2].data_ptr = &y;
+
+    if (KERN_SUCCESS != kev_msg_post(&kEventMsg)) {
+        return false;
+    }
+    return true;
+}
