@@ -52,6 +52,7 @@
 /* Begin PBXFileReference section */
 		7537E720245B67E000E127AB /* io.github.goshin.TongfangFnDaemon.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = io.github.goshin.TongfangFnDaemon.plist; sourceTree = "<group>"; };
 		7537E722245B6EA900E127AB /* uninstall_daemon.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = uninstall_daemon.sh; sourceTree = "<group>"; };
+		75772E08245EA780001D709D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		758A37222448D48B00BD98C0 /* KernEventServer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KernEventServer.hpp; sourceTree = "<group>"; };
 		758A37242448D78500BD98C0 /* KernEventServer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KernEventServer.cpp; sourceTree = "<group>"; };
 		7596CF562448AC9400333C46 /* TongfangKeyboardUtility.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TongfangKeyboardUtility.kext; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -97,6 +98,7 @@
 		7596CF4C2448AC9400333C46 = {
 			isa = PBXGroup;
 			children = (
+				75772E08245EA780001D709D /* README.md */,
 				75D7CCB4244A5FC2003CDA27 /* DSDT-Patch */,
 				7596CF582448AC9400333C46 /* TongfangKeyboardUtility */,
 				75D7CCA1244A5D1D003CDA27 /* TongfangFnDaemon */,
@@ -186,6 +188,7 @@
 				75F35B87245D0C0700DD127F /* Linting */,
 				75F35B88245D26DC00DD127F /* Build DSDT Patch */,
 				75F35B89245D274200DD127F /* Copy Files */,
+				75772E07245EA5E8001D709D /* Move Daemon */,
 			);
 			buildRules = (
 			);
@@ -259,6 +262,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		75772E07245EA5E8001D709D /* Move Daemon */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Move Daemon";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "rm -rf \"${BUILT_PRODUCTS_DIR}/Daemon\"\nmkdir -p \"${BUILT_PRODUCTS_DIR}/Daemon\"\nmv \"${BUILT_PRODUCTS_DIR}/TongfangFnDaemon\" \"${BUILT_PRODUCTS_DIR}/install_daemon.sh\" \"${BUILT_PRODUCTS_DIR}/uninstall_daemon.sh\" \"${BUILT_PRODUCTS_DIR}/io.github.goshin.TongfangFnDaemon.plist\" \"${BUILT_PRODUCTS_DIR}/Daemon\"\n\nopen \"${BUILT_PRODUCTS_DIR}\"\n";
+		};
 		75F35B87245D0C0700DD127F /* Linting */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -275,7 +296,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncpplint --recursive --filter=-build/header_guard,-whitespace/line_length,-runtime/int,-readability/casting,-legal/copyright --extensions=h,c,hpp,cpp,m ./\ncpplint --filter=-whitespace/line_length,-legal/copyright,-whitespace/braces,-whitespace/parens --extensions=dsl ./DSDT-Patch/SSDT-FN.dsl\n";
+			shellScript = "cpplint --recursive --filter=-build/header_guard,-whitespace/line_length,-runtime/int,-readability/casting,-legal/copyright --extensions=h,c,hpp,cpp,m ./\\\n&& cpplint --filter=-whitespace/line_length,-legal/copyright,-whitespace/braces,-whitespace/parens --extensions=dsl ./DSDT-Patch/SSDT-FN.dsl\n";
 		};
 		75F35B88245D26DC00DD127F /* Build DSDT Patch */ = {
 			isa = PBXShellScriptBuildPhase;

@@ -13,9 +13,16 @@ A set of the kernel extension, DSDT patch, daemon program for keyboard Fn keys f
 | F5       | Toggle Touchpad                      | VoodooI2C required     |
 | F6, F7   | Increase/Decrease Keyboard Backlight | -                      |
 | F8 - F10 | Adjust Volume                        | -                      |
-| F10, F11 | Adjust Screen Backlight              | VoodooPS2 required     |
+| F11, F12 | Adjust Screen Backlight              | VoodooPS2 required     |
 
-## Installation
+## Usage
+
+### Build Dependencies
+
+- `cpplint`: static code checker;
+- `iasl`: ACPI Source Language compiler/decompiler.
+
+### Installation
 
 1. Install the kernel extension `TongfangKeyboardUtility.kext`;
 2. Apply the DSDT patch `SSDT-FN.aml` and rename the methods detailed in `patch-config.txt`;
