@@ -221,6 +221,10 @@ void registerHotKeys() {
     eventHotKeyID.id = 2;
     // Ctrl + Opt + F13
     RegisterEventHotKey(0x69, controlKey | optionKey, eventHotKeyID, GetApplicationEventTarget(), 0, &eventHotKeyRef);
+    // Ctrl + Cmd + F13
+    RegisterEventHotKey(0x69, controlKey | cmdKey, eventHotKeyID, GetApplicationEventTarget(), 0, &eventHotKeyRef);
+    // Opt + Cmd + F13
+    RegisterEventHotKey(0x69, optionKey | cmdKey, eventHotKeyID, GetApplicationEventTarget(), 0, &eventHotKeyRef);
 
     printf("TongfangFnDaemon:: Register HotKeys\n");
 }
