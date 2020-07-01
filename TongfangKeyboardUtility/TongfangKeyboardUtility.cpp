@@ -3,6 +3,17 @@
 typedef IOService super;
 OSDefineMetaClassAndStructors(TongfangKeyboardUtility, IOService)
 
+IOService* TongfangKeyboardUtility::probe(IOService* provider, SInt32* score) {
+    IOService* result = super::probe(provider, score);
+
+    IOACPIPlatformDevice* device = OSDynamicCast(IOACPIPlatformDevice, provider);
+    if (!device || device->validateObject(SAC1_GETTER_METHOD_NAME) != kIOReturnSuccess) {
+        return nullptr;
+    }
+
+    return result;
+}
+
 bool TongfangKeyboardUtility::start(IOService* provider) {
     DEBUG_LOG("%s::start: called\n", getName());
     if (!super::start(provider)) {
@@ -37,11 +48,28 @@ IOReturn TongfangKeyboardUtility::message(UInt32 type, IOService* provider, void
         DEBUG_LOG("%s::message(%x, %p, %x)\n", getName(), type, provider, *reinterpret_cast<unsigned*>(argument));
     }
 
-    uint8_t msg = *reinterpret_cast<unsigned*>(argument);
-    uint8_t commandId = msg >> 4;
-    uint8_t commandArg = msg & 0x0f;
-    DEBUG_LOG("%s::message(%x, %x)\n", getName(), commandId, commandArg);
-    dispatchCommand(commandId, commandArg);
+    UInt32 eventType = *reinterpret_cast<UInt32*>(argument);
+    if (eventType != WMBC_CALL_CODE) {
+        return kIOReturnSuccess;
+    }
+
+    IOACPIPlatformDevice* wmiDevice = OSDynamicCast(IOACPIPlatformDevice, getProvider());
+    if (!wmiDevice) {
+        return kIOReturnSuccess;
+    }
+
+    UInt32 eventCode = 0;
+    OSNumber* getterArgument = OSNumber::withNumber(SAC1_GETTER_ARG0, 32);
+    OSObject* argList[] = { getterArgument };
+    IOReturn ret = wmiDevice->evaluateInteger(SAC1_GETTER_METHOD_NAME, &eventCode, argList, 1);
+    getterArgument->release();
+    if (ret != kIOReturnSuccess) {
+        DEBUG_LOG("%s:: failed to invoke GETC method", getName());
+        return kIOReturnSuccess;
+    }
+    DEBUG_LOG("%s:: get event: 0x%X", getName(), eventCode);
+
+    dispatchCommand(eventCode, 0);
 
     return kIOReturnSuccess;
 }
@@ -53,8 +81,8 @@ void TongfangKeyboardUtility::stop(IOService* provider) {
 
 void TongfangKeyboardUtility::sendMessageToDaemon(int type, int arg1, int arg2) {
     TongfangKeyboardUtilityKernEventServer eventServer;
-    eventServer.setVendorID("tongfang");
-    eventServer.setEventCode(FnEventCode);
+    eventServer.setVendorID(KERNEL_EVENT_VENDOR_ID);
+    eventServer.setEventCode(KERNEL_EVENT_CODE);
     eventServer.sendMessage(type, arg1, arg2);
 }
 
@@ -91,19 +119,17 @@ void TongfangKeyboardUtility::adjustBrightness(bool increase) {
 
 void TongfangKeyboardUtility::dispatchCommand(uint8_t id, uint8_t arg) {
     switch (id) {
-        case 4:
+        case kWMIEventWiFiOn:
+        case kWMIEventWiFiOff:
             sendMessageToDaemon(kToggleWifi, 0, 0);
             break;
-        case 6:
-            sendMessageToDaemon(kDecreaseKeyboardBacklight, 0, 0);
-            break;
-        case 7:
+        case kWMIEventAdjustKeyboardBacklight:
             sendMessageToDaemon(kIncreaseKeyboardBacklight, 0, 0);
             break;
-        case 11:
+        case kWMIEventScreenBacklightDown:
             adjustBrightness(false);
             break;
-        case 12:
+        case kWMIEventScreenBacklightUp:
             adjustBrightness(true);
             break;
         default:

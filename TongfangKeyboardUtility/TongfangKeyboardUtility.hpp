@@ -17,7 +17,24 @@
 #define DEBUG_LOG(args...)
 #endif
 
-#define FnEventCode 0x8102
+#define KERNEL_EVENT_CODE 0x8102
+#define KERNEL_EVENT_VENDOR_ID "tongfang"
+
+#define WMBC_CALL_CODE 0xD2
+#define SAC1_GETTER_ARG0 1
+#define SAC1_GETTER_METHOD_NAME "GETC"
+
+enum WMIEvent {
+    kWMIEventWiFiOn = 0x1A,
+    kWMIEventWiFiOff = 0x1B,
+    kWMIEventAdjustKeyboardBacklight = 0xF0,
+    kWMIEventVolumeMute = 0x35,
+    kWMIEventVolumeDown = 0x36,
+    kWMIEventVolumeUp = 0x37,
+    kWMIEventScreenBacklightDown = 0x15,
+    kWMIEventScreenBacklightUp = 0x14,
+};
+
 enum {
     kToggleWifi = 1,
     kSwitchDisplay = 2,
@@ -39,6 +56,7 @@ class EXPORT TongfangKeyboardUtility : public IOService {
     OSDeclareDefaultStructors(TongfangKeyboardUtility)
 
  public:
+    IOService* probe(IOService* provider, SInt32* score) override;
     bool start(IOService* provider) override;
     void stop(IOService* provider) override;
     IOReturn setProperties(OSObject* properties) override;
