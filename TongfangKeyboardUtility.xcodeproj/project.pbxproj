@@ -11,15 +11,14 @@
 		758A37252448D78500BD98C0 /* KernEventServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 758A37242448D78500BD98C0 /* KernEventServer.cpp */; };
 		7596CF5A2448AC9400333C46 /* TongfangKeyboardUtility.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7596CF592448AC9400333C46 /* TongfangKeyboardUtility.hpp */; };
 		7596CF5C2448AC9400333C46 /* TongfangKeyboardUtility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7596CF5B2448AC9400333C46 /* TongfangKeyboardUtility.cpp */; };
+		75C414A824AD2F6F0026E524 /* install_daemon.sh in Copy Files */ = {isa = PBXBuildFile; fileRef = 75D7CCB5244A5FC2003CDA27 /* install_daemon.sh */; };
+		75C414A924AD2F6F0026E524 /* uninstall_daemon.sh in Copy Files */ = {isa = PBXBuildFile; fileRef = 7537E722245B6EA900E127AB /* uninstall_daemon.sh */; };
+		75C414AA24AD2F6F0026E524 /* io.github.goshin.TongfangFnDaemon.plist in Copy Files */ = {isa = PBXBuildFile; fileRef = 7537E720245B67E000E127AB /* io.github.goshin.TongfangFnDaemon.plist */; };
 		75D7CCA3244A5D1D003CDA27 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 75D7CCA2244A5D1D003CDA27 /* main.m */; };
 		75D7CCAC244A5E77003CDA27 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75D7CCAB244A5E77003CDA27 /* AppKit.framework */; };
 		75D7CCAE244A5E7E003CDA27 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75D7CCAD244A5E7E003CDA27 /* CoreServices.framework */; };
 		75D7CCB0244A5E85003CDA27 /* CoreWLAN.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75D7CCAF244A5E85003CDA27 /* CoreWLAN.framework */; };
 		75D7CCB2244A5E95003CDA27 /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75D7CCB1244A5E95003CDA27 /* IOBluetooth.framework */; };
-		75F35B8A245D276600DD127F /* DSDT-Patch in Copy Files */ = {isa = PBXBuildFile; fileRef = 75D7CCB4244A5FC2003CDA27 /* DSDT-Patch */; };
-		75F35B8B245D277100DD127F /* install_daemon.sh in Copy Files */ = {isa = PBXBuildFile; fileRef = 75D7CCB5244A5FC2003CDA27 /* install_daemon.sh */; };
-		75F35B8C245D277100DD127F /* uninstall_daemon.sh in Copy Files */ = {isa = PBXBuildFile; fileRef = 7537E722245B6EA900E127AB /* uninstall_daemon.sh */; };
-		75F35B8D245D277100DD127F /* io.github.goshin.TongfangFnDaemon.plist in Copy Files */ = {isa = PBXBuildFile; fileRef = 7537E720245B67E000E127AB /* io.github.goshin.TongfangFnDaemon.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,10 +38,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				75F35B8B245D277100DD127F /* install_daemon.sh in Copy Files */,
-				75F35B8C245D277100DD127F /* uninstall_daemon.sh in Copy Files */,
-				75F35B8D245D277100DD127F /* io.github.goshin.TongfangFnDaemon.plist in Copy Files */,
-				75F35B8A245D276600DD127F /* DSDT-Patch in Copy Files */,
+				75C414A824AD2F6F0026E524 /* install_daemon.sh in Copy Files */,
+				75C414A924AD2F6F0026E524 /* uninstall_daemon.sh in Copy Files */,
+				75C414AA24AD2F6F0026E524 /* io.github.goshin.TongfangFnDaemon.plist in Copy Files */,
 			);
 			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -59,6 +57,7 @@
 		7596CF592448AC9400333C46 /* TongfangKeyboardUtility.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TongfangKeyboardUtility.hpp; sourceTree = "<group>"; };
 		7596CF5B2448AC9400333C46 /* TongfangKeyboardUtility.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TongfangKeyboardUtility.cpp; sourceTree = "<group>"; };
 		7596CF5D2448AC9400333C46 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75C4149A24AD2C430026E524 /* SSDT-FnF5.dsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SSDT-FnF5.dsl"; sourceTree = "<group>"; };
 		75D7CCA0244A5D1D003CDA27 /* TongfangFnDaemon */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TongfangFnDaemon; sourceTree = BUILT_PRODUCTS_DIR; };
 		75D7CCA2244A5D1D003CDA27 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		75D7CCA9244A5E3C003CDA27 /* OSD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSD.h; sourceTree = "<group>"; };
@@ -67,7 +66,6 @@
 		75D7CCAF244A5E85003CDA27 /* CoreWLAN.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreWLAN.framework; path = System/Library/Frameworks/CoreWLAN.framework; sourceTree = SDKROOT; };
 		75D7CCB1244A5E95003CDA27 /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
 		75D7CCB3244A5F52003CDA27 /* BezelServices.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BezelServices.h; sourceTree = "<group>"; };
-		75D7CCB4244A5FC2003CDA27 /* DSDT-Patch */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "DSDT-Patch"; sourceTree = "<group>"; };
 		75D7CCB5244A5FC2003CDA27 /* install_daemon.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = install_daemon.sh; sourceTree = "<group>"; };
 		75D7CCBC244A68A6003CDA27 /* libpthread.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpthread.tbd; path = usr/lib/libpthread.tbd; sourceTree = SDKROOT; };
 		75D7CCBD244A690E003CDA27 /* Kernel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kernel.framework; path = System/Library/Frameworks/Kernel.framework; sourceTree = SDKROOT; };
@@ -99,9 +97,9 @@
 			isa = PBXGroup;
 			children = (
 				75772E08245EA780001D709D /* README.md */,
-				75D7CCB4244A5FC2003CDA27 /* DSDT-Patch */,
 				7596CF582448AC9400333C46 /* TongfangKeyboardUtility */,
 				75D7CCA1244A5D1D003CDA27 /* TongfangFnDaemon */,
+				75C4149A24AD2C430026E524 /* SSDT-FnF5.dsl */,
 				7596CF572448AC9400333C46 /* Products */,
 				75D7CCAA244A5E76003CDA27 /* Frameworks */,
 			);
@@ -278,7 +276,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "rm -rf \"${BUILT_PRODUCTS_DIR}/Daemon\"\nmkdir -p \"${BUILT_PRODUCTS_DIR}/Daemon\"\nmv \"${BUILT_PRODUCTS_DIR}/TongfangFnDaemon\" \"${BUILT_PRODUCTS_DIR}/install_daemon.sh\" \"${BUILT_PRODUCTS_DIR}/uninstall_daemon.sh\" \"${BUILT_PRODUCTS_DIR}/io.github.goshin.TongfangFnDaemon.plist\" \"${BUILT_PRODUCTS_DIR}/Daemon\"\n\nopen \"${BUILT_PRODUCTS_DIR}\"\n";
+			shellScript = "rm -rf \"${BUILT_PRODUCTS_DIR}/Daemon\"\nmkdir -p \"${BUILT_PRODUCTS_DIR}/Daemon\"\nmv \"${BUILT_PRODUCTS_DIR}/TongfangFnDaemon\" \"${BUILT_PRODUCTS_DIR}/install_daemon.sh\" \"${BUILT_PRODUCTS_DIR}/uninstall_daemon.sh\" \"${BUILT_PRODUCTS_DIR}/io.github.goshin.TongfangFnDaemon.plist\" \"${BUILT_PRODUCTS_DIR}/Daemon\"\n";
 		};
 		75F35B87245D0C0700DD127F /* Linting */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -296,7 +294,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cpplint --recursive --filter=-build/header_guard,-whitespace/line_length,-runtime/int,-readability/casting,-legal/copyright --extensions=h,c,hpp,cpp,m ./\\\n&& cpplint --filter=-whitespace/line_length,-legal/copyright,-whitespace/braces,-whitespace/parens --extensions=dsl ./DSDT-Patch/SSDT-FN.dsl\n";
+			shellScript = "cpplint --recursive --filter=-build/header_guard,-whitespace/line_length,-runtime/int,-readability/casting,-legal/copyright --extensions=h,c,hpp,cpp,m ./\\\n&& cpplint --filter=-whitespace/line_length,-legal/copyright,-whitespace/braces,-whitespace/parens --extensions=dsl ./SSDT-FnF5.dsl\n";
 		};
 		75F35B88245D26DC00DD127F /* Build DSDT Patch */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -314,7 +312,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "rm ./DSDT-Patch/SSDT-FN.aml\niasl ./DSDT-Patch/SSDT-FN.dsl\n";
+			shellScript = "rm \"${BUILT_PRODUCTS_DIR}/SSDT-FnF5.aml\"\niasl \"./SSDT-FnF5.dsl\"\nmv \"./SSDT-FnF5.aml\" \"${BUILT_PRODUCTS_DIR}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
