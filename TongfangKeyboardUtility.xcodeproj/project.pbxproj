@@ -11,6 +11,8 @@
 		758A37252448D78500BD98C0 /* KernEventServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 758A37242448D78500BD98C0 /* KernEventServer.cpp */; };
 		7596CF5A2448AC9400333C46 /* TongfangKeyboardUtility.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7596CF592448AC9400333C46 /* TongfangKeyboardUtility.hpp */; };
 		7596CF5C2448AC9400333C46 /* TongfangKeyboardUtility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7596CF5B2448AC9400333C46 /* TongfangKeyboardUtility.cpp */; };
+		75A8192024ADDF3B00CAF134 /* ACPIPS2NubProxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75A8191E24ADDF3B00CAF134 /* ACPIPS2NubProxy.cpp */; };
+		75A8192124ADDF3B00CAF134 /* ACPIPS2NubProxy.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 75A8191F24ADDF3B00CAF134 /* ACPIPS2NubProxy.hpp */; };
 		75C414A824AD2F6F0026E524 /* install_daemon.sh in Copy Files */ = {isa = PBXBuildFile; fileRef = 75D7CCB5244A5FC2003CDA27 /* install_daemon.sh */; };
 		75C414A924AD2F6F0026E524 /* uninstall_daemon.sh in Copy Files */ = {isa = PBXBuildFile; fileRef = 7537E722245B6EA900E127AB /* uninstall_daemon.sh */; };
 		75C414AA24AD2F6F0026E524 /* io.github.goshin.TongfangFnDaemon.plist in Copy Files */ = {isa = PBXBuildFile; fileRef = 7537E720245B67E000E127AB /* io.github.goshin.TongfangFnDaemon.plist */; };
@@ -57,7 +59,8 @@
 		7596CF592448AC9400333C46 /* TongfangKeyboardUtility.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TongfangKeyboardUtility.hpp; sourceTree = "<group>"; };
 		7596CF5B2448AC9400333C46 /* TongfangKeyboardUtility.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TongfangKeyboardUtility.cpp; sourceTree = "<group>"; };
 		7596CF5D2448AC9400333C46 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		75C4149A24AD2C430026E524 /* SSDT-FnF5.dsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SSDT-FnF5.dsl"; sourceTree = "<group>"; };
+		75A8191E24ADDF3B00CAF134 /* ACPIPS2NubProxy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ACPIPS2NubProxy.cpp; sourceTree = "<group>"; };
+		75A8191F24ADDF3B00CAF134 /* ACPIPS2NubProxy.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ACPIPS2NubProxy.hpp; sourceTree = "<group>"; };
 		75D7CCA0244A5D1D003CDA27 /* TongfangFnDaemon */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TongfangFnDaemon; sourceTree = BUILT_PRODUCTS_DIR; };
 		75D7CCA2244A5D1D003CDA27 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		75D7CCA9244A5E3C003CDA27 /* OSD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSD.h; sourceTree = "<group>"; };
@@ -99,7 +102,6 @@
 				75772E08245EA780001D709D /* README.md */,
 				7596CF582448AC9400333C46 /* TongfangKeyboardUtility */,
 				75D7CCA1244A5D1D003CDA27 /* TongfangFnDaemon */,
-				75C4149A24AD2C430026E524 /* SSDT-FnF5.dsl */,
 				7596CF572448AC9400333C46 /* Products */,
 				75D7CCAA244A5E76003CDA27 /* Frameworks */,
 			);
@@ -122,6 +124,8 @@
 				7596CF592448AC9400333C46 /* TongfangKeyboardUtility.hpp */,
 				7596CF5B2448AC9400333C46 /* TongfangKeyboardUtility.cpp */,
 				7596CF5D2448AC9400333C46 /* Info.plist */,
+				75A8191E24ADDF3B00CAF134 /* ACPIPS2NubProxy.cpp */,
+				75A8191F24ADDF3B00CAF134 /* ACPIPS2NubProxy.hpp */,
 			);
 			path = TongfangKeyboardUtility;
 			sourceTree = "<group>";
@@ -167,6 +171,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75A8192124ADDF3B00CAF134 /* ACPIPS2NubProxy.hpp in Headers */,
 				758A37232448D48B00BD98C0 /* KernEventServer.hpp in Headers */,
 				7596CF5A2448AC9400333C46 /* TongfangKeyboardUtility.hpp in Headers */,
 			);
@@ -184,7 +189,6 @@
 				7596CF532448AC9400333C46 /* Frameworks */,
 				7596CF542448AC9400333C46 /* Resources */,
 				75F35B87245D0C0700DD127F /* Linting */,
-				75F35B88245D26DC00DD127F /* Build DSDT Patch */,
 				75F35B89245D274200DD127F /* Copy Files */,
 				75772E07245EA5E8001D709D /* Move Daemon */,
 			);
@@ -294,25 +298,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cpplint --recursive --filter=-build/header_guard,-whitespace/line_length,-runtime/int,-readability/casting,-legal/copyright --extensions=h,c,hpp,cpp,m ./\\\n&& cpplint --filter=-whitespace/line_length,-legal/copyright,-whitespace/braces,-whitespace/parens --extensions=dsl ./SSDT-FnF5.dsl\n";
-		};
-		75F35B88245D26DC00DD127F /* Build DSDT Patch */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Build DSDT Patch";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "rm \"${BUILT_PRODUCTS_DIR}/SSDT-FnF5.aml\"\niasl \"./SSDT-FnF5.dsl\"\nmv \"./SSDT-FnF5.aml\" \"${BUILT_PRODUCTS_DIR}\"\n";
+			shellScript = "cpplint --recursive --filter=-build/header_guard,-whitespace/line_length,-runtime/int,-readability/casting,-legal/copyright --extensions=h,c,hpp,cpp,m ./\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -321,6 +307,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75A8192024ADDF3B00CAF134 /* ACPIPS2NubProxy.cpp in Sources */,
 				7596CF5C2448AC9400333C46 /* TongfangKeyboardUtility.cpp in Sources */,
 				758A37252448D78500BD98C0 /* KernEventServer.cpp in Sources */,
 			);
