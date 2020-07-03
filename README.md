@@ -1,6 +1,8 @@
 # TongfangKeyboardUtility
 
-A WMI platform driver for Fn hotkeys functionality on Tongfang 8/9th gen laptop ODM models with Darwin-based OS.
+A WMI platform driver for Fn hotkeys functionality on Tongfang 8/9th gen laptop ODM models.
+
+*No DSDT patch needed.*
 
 ## Fn Key Features
 
@@ -13,7 +15,7 @@ A WMI platform driver for Fn hotkeys functionality on Tongfang 8/9th gen laptop 
 | F5       | Toggle Touchpad                      | VoodooPS2 required for remapping dead key |
 | F6, F7   | Increase/Decrease Keyboard Backlight | -                      |
 | F8 - F10 | Adjust Volume                        | -                      |
-| F11, F12 | Adjust Screen Backlight              | Remap to F14, F15 |
+| F11, F12 | Adjust Screen Backlight              | By sending F14, F15 |
 
 ## Usage
 
@@ -28,7 +30,7 @@ A WMI platform driver for Fn hotkeys functionality on Tongfang 8/9th gen laptop 
 
 ## Credits
 
-- hieplpvip for [AsusSMC](https://github.com/hieplpvip/AsusSMC).
+- @hieplpvip for the fancy daemon in [AsusSMC](https://github.com/hieplpvip/AsusSMC).
 
 ## License
 
