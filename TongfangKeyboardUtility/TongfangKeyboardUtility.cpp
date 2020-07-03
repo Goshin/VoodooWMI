@@ -89,32 +89,28 @@ void TongfangKeyboardUtility::sendMessageToDaemon(int type, int arg1, int arg2) 
 void TongfangKeyboardUtility::toggleTouchpad(bool enable) {
     const OSSymbol* key = OSSymbol::withCString("RM,deliverNotifications");
     OSDictionary* serviceMatch = propertyMatching(key, kOSBooleanTrue);
-    serviceMatch = serviceMatching("VoodooI2CPrecisionTouchpadHIDEventDriver", serviceMatch);
     if (IOService* touchpadDevice = waitForMatchingService(serviceMatch, 1e9)) {
-        DEBUG_LOG("%s::get VoodooI2C touchpad service\n", getName());
+        DEBUG_LOG("%s::get touchpad service\n", getName());
         touchpadDevice->message(kKeyboardSetTouchStatus, this, &enable);
         touchpadDevice->release();
     } else {
-        DEBUG_LOG("%s no VoodooI2C touchpad service", getName());
+        DEBUG_LOG("%s failed to get touchpad service", getName());
     }
     key->release();
     serviceMatch->release();
 }
 
 void TongfangKeyboardUtility::adjustBrightness(bool increase) {
-    const OSSymbol* key = OSSymbol::withCString("RM,deliverNotifications");
-    OSDictionary* serviceMatch = propertyMatching(key, kOSBooleanTrue);
-    serviceMatch = serviceMatching("ApplePS2Keyboard", serviceMatch);
-    if (IOService* keyboardService = waitForMatchingService(serviceMatch, 1e9)) {
-        DEBUG_LOG("%s::get VoodooPS2 keyboard service\n", getName());
-        unsigned keyCode = increase ? 0x0406 : 0x0405;
-        keyboardService->message(kIOACPIMessageDeviceNotification, this, &keyCode);
-        keyboardService->release();
+    if (IOService* keyboardDevice = OSDynamicCast(IOService, IORegistryEntry::fromPath("IOService:/AppleACPIPlatformExpert/PS2K"))) {
+        if (IOService* keyboardDriver = keyboardDevice->getClient()) {
+            DEBUG_LOG("%s::get keyboard device\n", getName());
+            unsigned keyCode = increase ? 0x0406 : 0x0405;
+            keyboardDriver->message(kIOACPIMessageDeviceNotification, this, &keyCode);
+        }
+        keyboardDevice->release();
     } else {
-        DEBUG_LOG("%s VoodooPS2 keyboard service", getName());
+        DEBUG_LOG("%s failed to get keyboard device", getName());
     }
-    key->release();
-    serviceMatch->release();
 }
 
 void TongfangKeyboardUtility::dispatchCommand(uint8_t id, uint8_t arg) {
