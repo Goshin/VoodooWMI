@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		750A866924AFDD6100538E95 /* VoodooWMIController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 750A866724AFDD6100538E95 /* VoodooWMIController.cpp */; };
+		750A866A24AFDD6100538E95 /* VoodooWMIController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 750A866824AFDD6100538E95 /* VoodooWMIController.hpp */; };
 		758A37232448D48B00BD98C0 /* KernEventServer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 758A37222448D48B00BD98C0 /* KernEventServer.hpp */; };
 		758A37252448D78500BD98C0 /* KernEventServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 758A37242448D78500BD98C0 /* KernEventServer.cpp */; };
 		7596CF5A2448AC9400333C46 /* TongfangKeyboardUtility.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7596CF592448AC9400333C46 /* TongfangKeyboardUtility.hpp */; };
@@ -50,12 +52,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		750A866724AFDD6100538E95 /* VoodooWMIController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooWMIController.cpp; sourceTree = "<group>"; };
+		750A866824AFDD6100538E95 /* VoodooWMIController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VoodooWMIController.hpp; sourceTree = "<group>"; };
 		7537E720245B67E000E127AB /* io.github.goshin.TongfangFnDaemon.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = io.github.goshin.TongfangFnDaemon.plist; sourceTree = "<group>"; };
 		7537E722245B6EA900E127AB /* uninstall_daemon.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = uninstall_daemon.sh; sourceTree = "<group>"; };
 		75772E08245EA780001D709D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		758A37222448D48B00BD98C0 /* KernEventServer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KernEventServer.hpp; sourceTree = "<group>"; };
 		758A37242448D78500BD98C0 /* KernEventServer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KernEventServer.cpp; sourceTree = "<group>"; };
-		7596CF562448AC9400333C46 /* TongfangKeyboardUtility.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TongfangKeyboardUtility.kext; sourceTree = BUILT_PRODUCTS_DIR; };
+		7596CF562448AC9400333C46 /* VoodooWMI.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoodooWMI.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		7596CF592448AC9400333C46 /* TongfangKeyboardUtility.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TongfangKeyboardUtility.hpp; sourceTree = "<group>"; };
 		7596CF5B2448AC9400333C46 /* TongfangKeyboardUtility.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TongfangKeyboardUtility.cpp; sourceTree = "<group>"; };
 		7596CF5D2448AC9400333C46 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -110,7 +114,7 @@
 		7596CF572448AC9400333C46 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7596CF562448AC9400333C46 /* TongfangKeyboardUtility.kext */,
+				7596CF562448AC9400333C46 /* VoodooWMI.kext */,
 				75D7CCA0244A5D1D003CDA27 /* TongfangFnDaemon */,
 			);
 			name = Products;
@@ -126,6 +130,8 @@
 				7596CF5D2448AC9400333C46 /* Info.plist */,
 				75A8191E24ADDF3B00CAF134 /* ACPIPS2NubProxy.cpp */,
 				75A8191F24ADDF3B00CAF134 /* ACPIPS2NubProxy.hpp */,
+				750A866724AFDD6100538E95 /* VoodooWMIController.cpp */,
+				750A866824AFDD6100538E95 /* VoodooWMIController.hpp */,
 			);
 			path = TongfangKeyboardUtility;
 			sourceTree = "<group>";
@@ -171,6 +177,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				750A866A24AFDD6100538E95 /* VoodooWMIController.hpp in Headers */,
 				75A8192124ADDF3B00CAF134 /* ACPIPS2NubProxy.hpp in Headers */,
 				758A37232448D48B00BD98C0 /* KernEventServer.hpp in Headers */,
 				7596CF5A2448AC9400333C46 /* TongfangKeyboardUtility.hpp in Headers */,
@@ -180,9 +187,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		7596CF552448AC9400333C46 /* TongfangKeyboardUtility */ = {
+		7596CF552448AC9400333C46 /* VoodooWMI */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7596CF602448AC9400333C46 /* Build configuration list for PBXNativeTarget "TongfangKeyboardUtility" */;
+			buildConfigurationList = 7596CF602448AC9400333C46 /* Build configuration list for PBXNativeTarget "VoodooWMI" */;
 			buildPhases = (
 				7596CF512448AC9400333C46 /* Headers */,
 				7596CF522448AC9400333C46 /* Sources */,
@@ -197,9 +204,9 @@
 			dependencies = (
 				75D7CCA8244A5DEA003CDA27 /* PBXTargetDependency */,
 			);
-			name = TongfangKeyboardUtility;
+			name = VoodooWMI;
 			productName = TongfangKeyboardUtility;
-			productReference = 7596CF562448AC9400333C46 /* TongfangKeyboardUtility.kext */;
+			productReference = 7596CF562448AC9400333C46 /* VoodooWMI.kext */;
 			productType = "com.apple.product-type.kernel-extension";
 		};
 		75D7CC9F244A5D1D003CDA27 /* TongfangFnDaemon */ = {
@@ -234,7 +241,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 7596CF502448AC9400333C46 /* Build configuration list for PBXProject "TongfangKeyboardUtility" */;
+			buildConfigurationList = 7596CF502448AC9400333C46 /* Build configuration list for PBXProject "VoodooWMI" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -247,7 +254,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7596CF552448AC9400333C46 /* TongfangKeyboardUtility */,
+				7596CF552448AC9400333C46 /* VoodooWMI */,
 				75D7CC9F244A5D1D003CDA27 /* TongfangFnDaemon */,
 			);
 		};
@@ -298,7 +305,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cpplint --recursive --filter=-build/header_guard,-whitespace/line_length,-runtime/int,-readability/casting,-legal/copyright --extensions=h,c,hpp,cpp,m ./\n";
+			shellScript = "#cpplint --recursive --filter=-build/header_guard,-whitespace/line_length,-runtime/int,-readability/casting,-legal/copyright --extensions=h,c,hpp,cpp,m ./\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -310,6 +317,7 @@
 				75A8192024ADDF3B00CAF134 /* ACPIPS2NubProxy.cpp in Sources */,
 				7596CF5C2448AC9400333C46 /* TongfangKeyboardUtility.cpp in Sources */,
 				758A37252448D78500BD98C0 /* KernEventServer.cpp in Sources */,
+				750A866924AFDD6100538E95 /* VoodooWMIController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -498,7 +506,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7596CF502448AC9400333C46 /* Build configuration list for PBXProject "TongfangKeyboardUtility" */ = {
+		7596CF502448AC9400333C46 /* Build configuration list for PBXProject "VoodooWMI" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7596CF5E2448AC9400333C46 /* Debug */,
@@ -507,7 +515,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7596CF602448AC9400333C46 /* Build configuration list for PBXNativeTarget "TongfangKeyboardUtility" */ = {
+		7596CF602448AC9400333C46 /* Build configuration list for PBXNativeTarget "VoodooWMI" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7596CF612448AC9400333C46 /* Debug */,
