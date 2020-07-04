@@ -41,7 +41,6 @@ IOService* VoodooWMIController::probe(IOService* provider, SInt32* score) {
 }
 
 bool VoodooWMIController::start(IOService* provider) {
-    DEBUG_LOG("%s::start: called\n", getName());
     if (!super::start(provider)) {
         return false;
     }
@@ -61,8 +60,6 @@ bool VoodooWMIController::start(IOService* provider) {
 }
 
 void VoodooWMIController::stop(IOService* provider) {
-    DEBUG_LOG("%s::stop: called\n", getName());
-
     IOFree(blockList, blockCount * sizeof(WMIBlock));
     IOFree(handlerList, blockCount * sizeof(WMIEventHandler));
 
@@ -294,7 +291,16 @@ IOReturn VoodooWMIController::queryBlock(const char* guid, UInt8 instanceIndex, 
     strncat(methodName, block->objectId, 2);
 
     OSObject* argumentList[] = { OSNumber::withNumber(instanceIndex, 8) };
-    return device->evaluateObject(methodName, result, argumentList, 1);
+
+    if (block->flags & ACPI_WMI_EXPENSIVE) {
+        setBlockEnable(guid, true);
+    }
+    IOReturn ret = device->evaluateObject(methodName, result, argumentList, 1);
+    if (block->flags & ACPI_WMI_EXPENSIVE) {
+        setBlockEnable(guid, false);
+    }
+
+    return ret;
 }
 
 IOReturn VoodooWMIController::evaluateMethod(const char* guid, UInt8 instanceIndex, UInt32 methodId, OSObject* inputData, OSObject** result) {

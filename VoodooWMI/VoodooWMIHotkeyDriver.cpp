@@ -1,9 +1,13 @@
-#include "TongfangKeyboardUtility.hpp"
+#include "VoodooWMIHotkeyDriver.hpp"
+
+extern "C" {
+#include <sys/kern_event.h>
+}
 
 typedef IOService super;
-OSDefineMetaClassAndStructors(TongfangKeyboardUtility, IOService)
+OSDefineMetaClassAndStructors(VoodooWMIHotkeyDriver, IOService)
 
-IOService* TongfangKeyboardUtility::probe(IOService* provider, SInt32* score) {
+IOService* VoodooWMIHotkeyDriver::probe(IOService* provider, SInt32* score) {
     IOService* result = super::probe(provider, score);
 
     if (!(wmiController = OSDynamicCast(VoodooWMIController, provider))) {
@@ -17,20 +21,20 @@ IOService* TongfangKeyboardUtility::probe(IOService* provider, SInt32* score) {
     return result;
 }
 
-bool TongfangKeyboardUtility::start(IOService* provider) {
+bool VoodooWMIHotkeyDriver::start(IOService* provider) {
     DEBUG_LOG("%s::start: called\n", getName());
     if (!super::start(provider)) {
         return false;
     }
 
-    wmiController->registerWMIEvent(TONGFANG_WMI_EVENT_GUID, this, OSMemberFunctionCast(WMIEventAction, this, &TongfangKeyboardUtility::onWMIEvent));
+    wmiController->registerWMIEvent(TONGFANG_WMI_EVENT_GUID, this, OSMemberFunctionCast(WMIEventAction, this, &VoodooWMIHotkeyDriver::onWMIEvent));
 
     registerService();
 
     return true;
 }
 
-IOReturn TongfangKeyboardUtility::setProperties(OSObject* properties) {
+IOReturn VoodooWMIHotkeyDriver::setProperties(OSObject* properties) {
     DEBUG_LOG("%s get property", getName());
     if (OSDictionary* dict = OSDynamicCast(OSDictionary, properties)) {
         if (OSCollectionIterator* i = OSCollectionIterator::withCollection(dict)) {
@@ -48,14 +52,14 @@ IOReturn TongfangKeyboardUtility::setProperties(OSObject* properties) {
     return kIOReturnSuccess;
 }
 
-void TongfangKeyboardUtility::onWMIEvent(WMIBlock* block, OSObject* eventData) {
+void VoodooWMIHotkeyDriver::onWMIEvent(WMIBlock* block, OSObject* eventData) {
     if (OSNumber* id = OSDynamicCast(OSNumber, eventData)) {
         DEBUG_LOG("%s::onWMIEvent %02X, %02X\n", getName(), block->notifyId, id->unsigned32BitValue());
         dispatchCommand(id->unsigned32BitValue(), 0);
     }
 }
 
-void TongfangKeyboardUtility::stop(IOService* provider) {
+void VoodooWMIHotkeyDriver::stop(IOService* provider) {
     DEBUG_LOG("%s::stop: called\n", getName());
 
     wmiController->unregisterWMIEvent(TONGFANG_WMI_EVENT_GUID);
@@ -63,14 +67,29 @@ void TongfangKeyboardUtility::stop(IOService* provider) {
     super::stop(provider);
 }
 
-void TongfangKeyboardUtility::sendMessageToDaemon(int type, int arg1, int arg2) {
-    TongfangKeyboardUtilityKernEventServer eventServer;
-    eventServer.setVendorID(KERNEL_EVENT_VENDOR_ID);
-    eventServer.setEventCode(KERNEL_EVENT_CODE);
-    eventServer.sendMessage(type, arg1, arg2);
+void VoodooWMIHotkeyDriver::sendMessageToDaemon(int type, int arg1, int arg2) {
+    struct kev_msg kernelEventMsg = {0};
+
+    uint32_t vendorID = 0;
+    if (KERN_SUCCESS != kev_vendor_code_find(KERNEL_EVENT_VENDOR_ID, &vendorID)) {
+        return;
+    }
+    kernelEventMsg.vendor_code = vendorID;
+    kernelEventMsg.event_code = KERNEL_EVENT_CODE;
+    kernelEventMsg.kev_class = KEV_ANY_CLASS;
+    kernelEventMsg.kev_subclass = KEV_ANY_SUBCLASS;
+
+    kernelEventMsg.dv[0].data_length = sizeof(int);
+    kernelEventMsg.dv[0].data_ptr = &type;
+    kernelEventMsg.dv[1].data_length = sizeof(int);
+    kernelEventMsg.dv[1].data_ptr = &arg1;
+    kernelEventMsg.dv[2].data_length = sizeof(int);
+    kernelEventMsg.dv[2].data_ptr = &arg2;
+
+    kev_msg_post(&kernelEventMsg);
 }
 
-void TongfangKeyboardUtility::toggleTouchpad(bool enable) {
+void VoodooWMIHotkeyDriver::toggleTouchpad(bool enable) {
     const OSSymbol* key = OSSymbol::withCString("RM,deliverNotifications");
     OSDictionary* serviceMatch = propertyMatching(key, kOSBooleanTrue);
     if (IOService* touchpadDevice = waitForMatchingService(serviceMatch, 1e9)) {
@@ -84,7 +103,7 @@ void TongfangKeyboardUtility::toggleTouchpad(bool enable) {
     serviceMatch->release();
 }
 
-void TongfangKeyboardUtility::adjustBrightness(bool increase) {
+void VoodooWMIHotkeyDriver::adjustBrightness(bool increase) {
     if (IOService* keyboardDevice = OSDynamicCast(IOService, IORegistryEntry::fromPath("IOService:/AppleACPIPlatformExpert/PS2K"))) {
         if (IOService* keyboardDriver = keyboardDevice->getClient()) {
             DEBUG_LOG("%s::get keyboard device\n", getName());
@@ -97,7 +116,7 @@ void TongfangKeyboardUtility::adjustBrightness(bool increase) {
     }
 }
 
-void TongfangKeyboardUtility::dispatchCommand(uint8_t id, uint8_t arg) {
+void VoodooWMIHotkeyDriver::dispatchCommand(uint8_t id, uint8_t arg) {
     switch (id) {
         case kWMIEventWiFiOn:
         case kWMIEventWiFiOff:

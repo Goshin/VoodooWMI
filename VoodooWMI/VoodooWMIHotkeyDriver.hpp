@@ -1,10 +1,8 @@
-#ifndef __TONGFANG_KEYBOARD_UTILITY__
-#define __TONGFANG_KEYBOARD_UTILITY__
+#ifndef __VOODOOWMI_HOTKEY_DRIVER__
+#define __VOODOOWMI_HOTKEY_DRIVER__
 
 #include <IOKit/IOService.h>
 #include "VoodooWMIController.hpp"
-
-#include "KernEventServer.hpp"
 
 #ifndef EXPORT
 #define EXPORT __attribute__((visibility("default")))
@@ -50,8 +48,8 @@ enum {
 
 
 
-class EXPORT TongfangKeyboardUtility : public IOService {
-    OSDeclareDefaultStructors(TongfangKeyboardUtility)
+class EXPORT VoodooWMIHotkeyDriver : public IOService {
+    OSDeclareDefaultStructors(VoodooWMIHotkeyDriver)
 
     VoodooWMIController* wmiController = nullptr;
 
@@ -69,6 +67,8 @@ class EXPORT TongfangKeyboardUtility : public IOService {
 
     void toggleTouchpad(bool enable);
     void adjustBrightness(bool increase);
+
+    bool sendKernelMessage(const char *vendorCode, uint32_t eventCode, int arg1, int arg2, int arg3);
 };
 
-#endif  // __TONGFANG_KEYBOARD_UTILITY__
+#endif  // __VOODOOWMI_HOTKEY_DRIVER__

@@ -1,5 +1,4 @@
 #include "ACPIPS2NubProxy.hpp"
-#include "TongfangKeyboardUtility.hpp"
 
 typedef IOACPIPlatformDevice super;
 OSDefineMetaClassAndStructors(ACPIPS2NubProxy, IOACPIPlatformDevice)
