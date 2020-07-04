@@ -2,7 +2,7 @@
 #define __TONGFANG_KEYBOARD_UTILITY__
 
 #include <IOKit/IOService.h>
-#include <IOKit/acpi/IOACPIPlatformDevice.h>
+#include "VoodooWMIController.hpp"
 
 #include "KernEventServer.hpp"
 
@@ -20,9 +20,7 @@
 #define KERNEL_EVENT_CODE 0x8102
 #define KERNEL_EVENT_VENDOR_ID "tongfang"
 
-#define WMBC_CALL_CODE 0xD2
-#define SAC1_GETTER_ARG0 1
-#define SAC1_GETTER_METHOD_NAME "GETC"
+#define TONGFANG_WMI_EVENT_GUID "ABBC0F72-8EA1-11D1-00A0-C90629100000"
 
 enum WMIEvent {
     kWMIEventWiFiOn = 0x1A,
@@ -55,12 +53,15 @@ enum {
 class EXPORT TongfangKeyboardUtility : public IOService {
     OSDeclareDefaultStructors(TongfangKeyboardUtility)
 
+    VoodooWMIController* wmiController = nullptr;
+
  public:
     IOService* probe(IOService* provider, SInt32* score) override;
     bool start(IOService* provider) override;
     void stop(IOService* provider) override;
     IOReturn setProperties(OSObject* properties) override;
-    IOReturn message(UInt32 type, IOService* provider, void* argument) override;
+
+    void onWMIEvent(WMIBlock* block, OSObject* eventData);
 
  private:
     void sendMessageToDaemon(int type, int arg1, int arg2);

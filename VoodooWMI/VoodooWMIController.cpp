@@ -54,7 +54,7 @@ bool VoodooWMIController::start(IOService* provider) {
         return false;
     }
 
-    setProperty("WMI-UID", getProperty("_UID"));
+    setProperty("WMI-UID", provider->getProperty("_UID"));
     registerService();
 
     return true;
@@ -70,9 +70,10 @@ void VoodooWMIController::stop(IOService* provider) {
 }
 
 IOReturn VoodooWMIController::message(UInt32 type, IOService* provider, void* argument) {
-    if (type == kIOACPIMessageDeviceNotification) {
-        DEBUG_LOG("%s::message(%x, %s, %x)\n", getName(), type, provider->getName(), *reinterpret_cast<unsigned*>(argument));
+    if (type != kIOACPIMessageDeviceNotification) {
+        return kIOReturnSuccess;
     }
+    DEBUG_LOG("%s::message(%x, %s, %x)\n", getName(), type, provider->getName(), *reinterpret_cast<unsigned*>(argument));
 
     UInt8 notifyId = *reinterpret_cast<unsigned*>(argument);
     OSObject* eventData = nullptr;
@@ -229,7 +230,7 @@ IOReturn VoodooWMIController::getEventData(UInt8 notifyId, OSObject** result){
     return device->evaluateObject(methodName, result, argumentList, 1);
 }
 
-IOReturn VoodooWMIController::registerEventHandler(const char* guid, OSObject* target, WMIEventAction handler){
+IOReturn VoodooWMIController::registerWMIEvent(const char* guid, OSObject* target, WMIEventAction handler){
     WMIBlock* block = nullptr;
     if (!(block = findBlock(guid))) {
         return kIOReturnNotFound;
@@ -244,7 +245,7 @@ IOReturn VoodooWMIController::registerEventHandler(const char* guid, OSObject* t
     return setEventEnable(guid, true);
 }
 
-IOReturn VoodooWMIController::unregisterEventHandler(const char* guid){
+IOReturn VoodooWMIController::unregisterWMIEvent(const char* guid){
     WMIBlock* block = nullptr;
     if (!(block = findBlock(guid))) {
         return kIOReturnNotFound;

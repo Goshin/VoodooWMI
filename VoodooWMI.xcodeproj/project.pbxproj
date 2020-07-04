@@ -104,7 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				75772E08245EA780001D709D /* README.md */,
-				7596CF582448AC9400333C46 /* TongfangKeyboardUtility */,
+				7596CF582448AC9400333C46 /* VoodooWMI */,
 				75D7CCA1244A5D1D003CDA27 /* TongfangFnDaemon */,
 				7596CF572448AC9400333C46 /* Products */,
 				75D7CCAA244A5E76003CDA27 /* Frameworks */,
@@ -120,7 +120,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		7596CF582448AC9400333C46 /* TongfangKeyboardUtility */ = {
+		7596CF582448AC9400333C46 /* VoodooWMI */ = {
 			isa = PBXGroup;
 			children = (
 				758A37242448D78500BD98C0 /* KernEventServer.cpp */,
@@ -133,7 +133,7 @@
 				750A866724AFDD6100538E95 /* VoodooWMIController.cpp */,
 				750A866824AFDD6100538E95 /* VoodooWMIController.hpp */,
 			);
-			path = TongfangKeyboardUtility;
+			path = VoodooWMI;
 			sourceTree = "<group>";
 		};
 		75D7CCA1244A5D1D003CDA27 /* TongfangFnDaemon */ = {
@@ -457,10 +457,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0d1;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = TongfangKeyboardUtility/Info.plist;
-				MODULE_NAME = io.github.goshin.TongfangKeyboardUtility;
+				INFOPLIST_FILE = VoodooWMI/Info.plist;
+				MODULE_NAME = io.github.goshin.VoodooWMI;
 				MODULE_VERSION = 1.0.0d1;
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.goshin.TongfangKeyboardUtility;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.goshin.VoodooWMI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = kext;
@@ -475,10 +475,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0d1;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = TongfangKeyboardUtility/Info.plist;
-				MODULE_NAME = io.github.goshin.TongfangKeyboardUtility;
+				INFOPLIST_FILE = VoodooWMI/Info.plist;
+				MODULE_NAME = io.github.goshin.VoodooWMI;
 				MODULE_VERSION = 1.0.0d1;
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.goshin.TongfangKeyboardUtility;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.goshin.VoodooWMI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = kext;

@@ -64,8 +64,8 @@ class VoodooWMIController : public IOService {
 
     bool hasGuid(const char* guid);
 
-    IOReturn registerEventHandler(const char* guid, OSObject* target, WMIEventAction handler);
-    IOReturn unregisterEventHandler(const char* guid);
+    IOReturn registerWMIEvent(const char* guid, OSObject* target, WMIEventAction handler);
+    IOReturn unregisterWMIEvent(const char* guid);
 
     IOReturn setBlock(const char* guid, UInt8 instanceIndex, OSObject* inputData);
     IOReturn queryBlock(const char* guid, UInt8 instanceIndex, OSObject** result);
