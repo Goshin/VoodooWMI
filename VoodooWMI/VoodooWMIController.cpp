@@ -67,7 +67,7 @@ void VoodooWMIController::stop(IOService* provider) {
 }
 
 IOReturn VoodooWMIController::message(UInt32 type, IOService* provider, void* argument) {
-    if (type != kIOACPIMessageDeviceNotification) {
+    if (type != kIOACPIMessageDeviceNotification || !argument) {
         return kIOReturnSuccess;
     }
     DEBUG_LOG("%s::message(%x, %s, %x)\n", getName(), type, provider->getName(), *reinterpret_cast<unsigned*>(argument));
@@ -76,8 +76,7 @@ IOReturn VoodooWMIController::message(UInt32 type, IOService* provider, void* ar
     OSObject* eventData = nullptr;
     if (getEventData(notifyId, &eventData) != kIOReturnSuccess) {
         IOLog("%s failed to get event data", getName());
-    }
-    if (OSNumber* eventID = OSDynamicCast(OSNumber, eventData)) {
+    } else if (OSNumber* eventID = OSDynamicCast(OSNumber, eventData)) {
         IOLog("%s event: notify id %02X, data %x", getName(), notifyId, eventID->unsigned32BitValue());
     }
 
@@ -94,7 +93,7 @@ IOReturn VoodooWMIController::message(UInt32 type, IOService* provider, void* ar
     }
 
     WMIEventHandler* handler = &handlerList[targetBlock - blockList];
-    if (handler == nullptr) {
+    if (handler->action == nullptr) {
         IOLog("%s unknown event, not registered", getName());
         return kIOReturnSuccess;
     }
@@ -150,8 +149,10 @@ bool VoodooWMIController::loadBlocks() {
         dict->setObject("Flags", OSNumber::withNumber(block->flags, 8));
 
         array->setObject(dict);
+        dict->release();
     }
     setProperty("WMI-Blocks", array);
+    array->release();
 
     for (int i = 0; i < blockCount; i++) {
         WMIBlock* block = &blockList[i];
