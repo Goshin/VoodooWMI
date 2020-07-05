@@ -31,13 +31,13 @@ enum WMIEvent {
     kWMIEventScreenBacklightUp = 0x14,
 };
 
-enum {
-    kToggleWifi = 1,
-    kSwitchDisplay = 2,
-    kEnableTouchpad = 3,
-    kDisableTouchpad = 4,
-    kDecreaseKeyboardBacklight = 5,
-    kIncreaseKeyboardBacklight = 6,
+enum DaemonCommand {
+    kDaemonToggleWifi = 1,
+    kDaemonSwitchDisplay = 2,
+    kDaemonEnableTouchpad = 3,
+    kDaemonDisableTouchpad = 4,
+    kDaemonDecreaseKeyboardBacklight = 5,
+    kDaemonIncreaseKeyboardBacklight = 6,
 };
 
 enum {

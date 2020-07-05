@@ -7,6 +7,12 @@ extern "C" {
 typedef IOService super;
 OSDefineMetaClassAndStructors(VoodooWMIHotkeyDriver, IOService)
 
+enum {
+    kKeyboardSetTouchStatus = iokit_vendor_specific_msg(100),  // set disable/enable touchpad (data is bool*)
+    kKeyboardGetTouchStatus = iokit_vendor_specific_msg(101),  // get disable/enable touchpad (data is bool*)
+    kKeyboardKeyPressTime = iokit_vendor_specific_msg(110),    // notify of timestamp a non-modifier key was pressed (data is uint64_t*)
+};
+
 IOService* VoodooWMIHotkeyDriver::probe(IOService* provider, SInt32* score) {
     IOService* result = super::probe(provider, score);
 
