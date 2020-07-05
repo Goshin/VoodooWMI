@@ -21,6 +21,11 @@ IOService* ACPIPS2NubProxy::probe(IOService* provider, SInt32* score) {
     IOService* result = super::probe(provider, score);
 
     DEBUG_LOG("%s::probe: called\n", DEBUG_TITLE);
+    if (OSBoolean* loadCustomKeymapProperty = OSDynamicCast(OSBoolean, getProperty("LoadCustomKeymap"))) {
+        if (!loadCustomKeymapProperty->getValue()) {
+            return nullptr;
+        }
+    }
     if (result) {
         probed = true;
         *score = 99;
@@ -99,11 +104,11 @@ IOReturn ACPIPS2NubProxy::evaluateObject(const char* objectName, OSObject** resu
     if (strcmp(objectName, "RMCF") != 0) {
         return provider->evaluateObject(objectName, result, params, paramCount);
     }
-    *result = injectRMCF();
+    *result = injectKeymap();
     return kIOReturnSuccess;
 }
 
-OSObject* ACPIPS2NubProxy::injectRMCF() {
+OSObject* ACPIPS2NubProxy::injectKeymap() {
     OSObject* result = nullptr;
 
     // todo: fix leaks
@@ -121,7 +126,7 @@ OSObject* ACPIPS2NubProxy::injectRMCF() {
         dict = OSDictionary::withCapacity(1);
     }
 
-    /*  dict = { "Keyboard": { "Custom PS2 Map": [ "76=64" ] } }  */
+    /*  dict = { "Keyboard": { "Custom PS2 Map": [ ... ] } }  */
     OSDictionary* keyboardDict;
     if (!(keyboardDict = OSDynamicCast(OSDictionary, dict->getObject("Keyboard")))) {
         DEBUG_LOG("%s::evaluateObject: create keyboard dict\n", DEBUG_TITLE);
@@ -135,7 +140,7 @@ OSObject* ACPIPS2NubProxy::injectRMCF() {
         keyMapArray = OSArray::withCapacity(1);
         keyboardDict->setObject("Custom PS2 Map", keyMapArray);
     }
-    keyMapArray->setObject(OSString::withCString("76=64"));
+    keyMapArray->merge(OSDynamicCast(OSArray, getProperty("Custom PS2 Map")));
 
     result = encodeObjToArray(dict);
 

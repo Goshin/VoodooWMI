@@ -14,6 +14,7 @@
 #import <sys/kern_event.h>
 #import "BezelServices.h"
 #import "OSD.h"
+#import "KernelMessage.h"
 
 /*
  *    kAERestart        will cause system to restart
@@ -30,22 +31,6 @@ void IOBluetoothPreferenceSetControllerPowerState(int);
 int IOBluetoothPreferenceGetControllerPowerState(void);
 
 static void *(*_BSDoGraphicWithMeterAndTimeout)(CGDirectDisplayID arg0, BSGraphic arg1, int arg2, float v, int timeout) = NULL;
-
-#define FnEventCode 0x8102
-enum {
-    kToggleWifi = 1,
-    kSwitchDisplay = 2,
-    kEnableTouchpad = 3,
-    kDisableTouchpad = 4,
-    kDecreaseKeyboardBacklight = 5,
-    kIncreaseKeyboardBacklight = 6,
-};
-
-struct TongfangKeyboardUtilityMessage {
-    int type;
-    int arg1;
-    int arg2;
-};
 
 const int kMaxDisplays = 16;
 u_int32_t vendorID = 0;
@@ -159,14 +144,14 @@ void switchDisplayMode() {
 }
 
 void setTouchpadProperty(bool isEnabled) {
-    io_service_t service = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("TongfangKeyboardUtility"));
+    io_service_t service = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("VoodooWMIHotkeyDriver"));
     if (service == IO_OBJECT_NULL) {
-        printf("TongfangFnDaemon:: could not find any services matching\n");
+        printf("VoodooWMIHotkeyDaemon:: could not find any services matching\n");
         return;
     }
     kern_return_t ret = IORegistryEntrySetCFProperty(service, CFSTR("Touchpad"), isEnabled ? kCFBooleanTrue : kCFBooleanFalse);
     if (ret != KERN_SUCCESS) {
-        printf("TongfangFnDaemon:: could not set property: %x\n", ret);
+        printf("VoodooWMIHotkeyDaemon:: could not set property: %x\n", ret);
     }
     IOObjectRelease(service);
 }
@@ -188,15 +173,15 @@ OSStatus onHotKeyEvent(EventHandlerCallRef nextHandler, EventRef theEvent, void 
 
     switch (eventId.id) {
         case 1:
-            printf("TongfangFnDaemon:: Fn+F3\n");
+            printf("VoodooWMIHotkeyDaemon:: Fn+F3\n");
             switchDisplayMode();
             break;
         case 2:
-            printf("TongfangFnDaemon:: Fn+F5\n");
+            printf("VoodooWMIHotkeyDaemon:: Fn+F5\n");
             toggleTouchpad();
             break;
         default:
-            printf("TongfangFnDaemon:: Unknown Command\n");
+            printf("VoodooWMIHotkeyDaemon:: Unknown Command\n");
             break;
     }
 
@@ -226,11 +211,11 @@ void registerHotKeys() {
     // Opt + Cmd + F13
     RegisterEventHotKey(0x69, optionKey | cmdKey, eventHotKeyID, GetApplicationEventTarget(), 0, &eventHotKeyRef);
 
-    printf("TongfangFnDaemon:: Register HotKeys\n");
+    printf("VoodooWMIHotkeyDaemon:: Register HotKeys\n");
 }
 
-void dispatchMessage(struct TongfangKeyboardUtilityMessage *message) {
-    printf("TongfangFnDaemon:: type:%d x:%d y:%d\n", message->type, message->arg1, message->arg2);
+void dispatchMessage(struct VoodooWMIHotkeyMessage *message) {
+    printf("VoodooWMIHotkeyDaemon:: type:%d x:%d y:%d\n", message->type, message->arg1, message->arg2);
 
     switch (message->type) {
         case kToggleWifi:
@@ -252,7 +237,7 @@ void dispatchMessage(struct TongfangKeyboardUtilityMessage *message) {
             showOSD(OSDGraphicKeyboardBacklightMeter, 0, 0);
             break;
         default:
-            printf("TongfangFnDaemon:: unknown type %d\n", message->type);
+            printf("VoodooWMIHotkeyDaemon:: unknown type %d\n", message->type);
     }
 }
 
@@ -283,9 +268,9 @@ void kernelMessageLoop() {
 
     // message from kext
     // ->size is cumulation of header, struct, and max length of a proc path
-    char kextMsg[KEV_MSG_HEADER_SIZE + sizeof(struct TongfangKeyboardUtilityMessage)] = {0};
+    char kextMsg[KEV_MSG_HEADER_SIZE + sizeof(struct VoodooWMIHotkeyMessage)] = {0};
 
-    struct TongfangKeyboardUtilityMessage *message = NULL;
+    struct VoodooWMIHotkeyMessage *message = NULL;
 
     while (YES) {
         bytesReceived = recv(systemSocket, kextMsg, sizeof(kextMsg), 0);
@@ -298,11 +283,11 @@ void kernelMessageLoop() {
         struct kern_event_msg *kernEventMsg = {0};
         kernEventMsg = (struct kern_event_msg*)kextMsg;
 
-        if (FnEventCode != kernEventMsg->event_code) {
+        if (KERNEL_EVENT_CODE != kernEventMsg->event_code) {
             continue;
         }
 
-        message = (struct TongfangKeyboardUtilityMessage*)&kernEventMsg->event_data[0];
+        message = (struct VoodooWMIHotkeyMessage*)&kernEventMsg->event_data[0];
 
         dispatchMessage(message);
     }
@@ -310,7 +295,7 @@ void kernelMessageLoop() {
 
 int main(int argc, const char *argv[]) {
     @autoreleasepool {
-        printf("TongfangFnDaemon:: daemon started...\n");
+        printf("VoodooWMIHotkey:: daemon started...\n");
 
         if (!_loadBezelServices()) {
             _loadOSDFramework();

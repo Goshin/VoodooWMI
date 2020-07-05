@@ -36,7 +36,7 @@ class ACPIPS2NubProxy : public IOACPIPlatformDevice {
     IOReturn evaluateObject(const char* objectName, OSObject** result = 0, OSObject* params[] = 0,
         IOItemCount paramCount = 0, IOOptionBits options = 0) override;
 
-    OSObject* injectRMCF();
+    OSObject* injectKeymap();
 
     OSObject* translateArray(OSArray* array);  /* copy from VoodooPS2Controller */
     OSObject* translateEntry(OSObject* obj);  /* copy from VoodooPS2Controller */

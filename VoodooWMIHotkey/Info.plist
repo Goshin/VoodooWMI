@@ -15,12 +15,80 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>IOKitPersonalities</key>
-	<dict/>
+	<dict>
+		<key>ACPIPS2NubProxy</key>
+		<dict>
+			<key>CFBundleIdentifier</key>
+			<string>${MODULE_NAME}</string>
+			<key>Custom PS2 Map</key>
+			<array>
+				<string>&quot;76=64&quot;</string>
+			</array>
+			<key>IOClass</key>
+			<string>ACPIPS2NubProxy</string>
+			<key>IONameMatch</key>
+			<string>PNP0303</string>
+			<key>IOProviderClass</key>
+			<string>IOACPIPlatformDevice</string>
+			<key>LoadCustomKeymap</key>
+			<false/>
+		</dict>
+		<key>VoodooWMIHotkeyDriver</key>
+		<dict>
+			<key>CFBundleIdentifier</key>
+			<string>${MODULE_NAME}</string>
+			<key>IOClass</key>
+			<string>VoodooWMIHotkeyDriver</string>
+			<key>IOPropertyMatch</key>
+			<dict>
+				<key>WMI-UID</key>
+				<string>1</string>
+			</dict>
+			<key>IOProviderClass</key>
+			<string>VoodooWMIController</string>
+			<key>VerifyGUID</key>
+			<string>ABBC0F72-8EA1-11D1-00A0-C90629100000</string>
+			<key>WMIEvents</key>
+			<array>
+				<dict>
+					<key>ActionID</key>
+					<integer>7</integer>
+					<key>EventData</key>
+					<integer>21</integer>
+					<key>GUID</key>
+					<string>ABBC0F72-8EA1-11D1-00A0-C90629100000</string>
+					<key>NotifyID</key>
+					<integer>210</integer>
+				</dict>
+				<dict>
+					<key>ActionID</key>
+					<integer>8</integer>
+					<key>EventData</key>
+					<integer>20</integer>
+					<key>GUID</key>
+					<string>ABBC0F72-8EA1-11D1-00A0-C90629100000</string>
+					<key>NotifyID</key>
+					<integer>210</integer>
+				</dict>
+			</array>
+		</dict>
+	</dict>
 	<key>OSBundleLibraries</key>
-	<dict/>
+	<dict>
+		<key>com.apple.iokit.IOACPIFamily</key>
+		<string>1.0d1</string>
+		<key>com.apple.kpi.bsd</key>
+		<string>8.0.0</string>
+		<key>com.apple.kpi.iokit</key>
+		<string>9.0.0</string>
+		<key>com.apple.kpi.libkern</key>
+		<string>9.0.0</string>
+		<key>io.github.goshin.VoodooWMI</key>
+		<string>1.0</string>
+	</dict>
 </dict>
 </plist>

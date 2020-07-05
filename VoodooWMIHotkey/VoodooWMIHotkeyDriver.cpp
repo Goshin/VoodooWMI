@@ -2,6 +2,7 @@
 
 extern "C" {
 #include <sys/kern_event.h>
+#include "KernelMessage.h"
 }
 
 typedef IOService super;
@@ -19,7 +20,9 @@ IOService* VoodooWMIHotkeyDriver::probe(IOService* provider, SInt32* score) {
     if (!(wmiController = OSDynamicCast(VoodooWMIController, provider))) {
         return nullptr;
     }
-    if (!wmiController->hasGuid(TONGFANG_WMI_EVENT_GUID)) {
+    OSString* verifyGuid = OSDynamicCast(OSString, getProperty("VerifyGUID"));
+    if (!verifyGuid || !wmiController->hasGuid(verifyGuid->getCStringNoCopy())) {
+        IOLog("%s::verify event guid not found\n", getName());
         return nullptr;
     }
     DEBUG_LOG("%s::find target event guid\n", getName());
@@ -33,7 +36,27 @@ bool VoodooWMIHotkeyDriver::start(IOService* provider) {
         return false;
     }
 
-    wmiController->registerWMIEvent(TONGFANG_WMI_EVENT_GUID, this, OSMemberFunctionCast(WMIEventAction, this, &VoodooWMIHotkeyDriver::onWMIEvent));
+    eventArray = OSDynamicCast(OSArray, getProperty("WMIEvents"));
+    if (!eventArray) {
+        IOLog("%s failed to get WMIEvents property", getName());
+        return false;
+    }
+    for (int i = 0; i < eventArray->getCount(); i++) {
+        OSDictionary* dict = OSDynamicCast(OSDictionary, eventArray->getObject(i));
+        if (!dict) {
+            IOLog("%s failed to parse hotkey event %d", getName(), i);
+            return false;
+        }
+        OSString* guid = OSDynamicCast(OSString, dict->getObject("GUID"));
+        OSNumber* notifyId = OSDynamicCast(OSNumber, dict->getObject("NotifyID"));
+        OSNumber* eventId = OSDynamicCast(OSNumber, dict->getObject("EventData"));
+        OSNumber* actionId = OSDynamicCast(OSNumber, dict->getObject("ActionID"));
+        if (!guid || !notifyId || !eventId || !actionId) {
+            IOLog("%s parse hotkey event failed %d", getName(), i);
+            return false;
+        }
+        wmiController->registerWMIEvent(guid->getCStringNoCopy(), this, OSMemberFunctionCast(WMIEventAction, this, &VoodooWMIHotkeyDriver::onWMIEvent));
+    }
 
     registerService();
 
@@ -59,16 +82,31 @@ IOReturn VoodooWMIHotkeyDriver::setProperties(OSObject* properties) {
 }
 
 void VoodooWMIHotkeyDriver::onWMIEvent(WMIBlock* block, OSObject* eventData) {
-    if (OSNumber* id = OSDynamicCast(OSNumber, eventData)) {
-        DEBUG_LOG("%s::onWMIEvent %02X, %02X\n", getName(), block->notifyId, id->unsigned32BitValue());
-        dispatchCommand(id->unsigned32BitValue(), 0);
+    int obtainedEventData = 0;
+    if (OSNumber* numberObj = OSDynamicCast(OSNumber, eventData)) {
+        obtainedEventData = numberObj->unsigned32BitValue();
+    }
+    DEBUG_LOG("%s::onWMIEvent (%02X, %02X)\n", getName(), block->notifyId, obtainedEventData);
+
+    for (int i = 0; i < eventArray->getCount(); i++) {
+        OSDictionary* dict = OSDynamicCast(OSDictionary, eventArray->getObject(i));
+        UInt8 notifyId = OSDynamicCast(OSNumber, dict->getObject("NotifyID"))->unsigned8BitValue();
+        int eventData = OSDynamicCast(OSNumber, dict->getObject("EventData"))->unsigned32BitValue();
+        UInt8 actionId = OSDynamicCast(OSNumber, dict->getObject("ActionID"))->unsigned8BitValue();
+        if (block->notifyId == notifyId && obtainedEventData == eventData) {
+            dispatchCommand(actionId);
+        }
     }
 }
 
 void VoodooWMIHotkeyDriver::stop(IOService* provider) {
     DEBUG_LOG("%s::stop: called\n", getName());
 
-    wmiController->unregisterWMIEvent(TONGFANG_WMI_EVENT_GUID);
+    for (int i = 0; i < eventArray->getCount(); i++) {
+        OSDictionary* dict = OSDynamicCast(OSDictionary, eventArray->getObject(i));
+        OSString* guid = OSDynamicCast(OSString, dict->getObject("GUID"));
+        wmiController->unregisterWMIEvent(guid->getCStringNoCopy());
+    }
 
     super::stop(provider);
 }
@@ -122,19 +160,19 @@ void VoodooWMIHotkeyDriver::adjustBrightness(bool increase) {
     }
 }
 
-void VoodooWMIHotkeyDriver::dispatchCommand(uint8_t id, uint8_t arg) {
+void VoodooWMIHotkeyDriver::dispatchCommand(uint8_t id) {
     switch (id) {
-        case kWMIEventWiFiOn:
-        case kWMIEventWiFiOff:
+        case kActionToggleAirplaneMode:
             sendMessageToDaemon(kToggleWifi, 0, 0);
             break;
-        case kWMIEventAdjustKeyboardBacklight:
+        case kActionKeyboardBacklightDown:
+        case kActionKeyboardBacklightUp:
             sendMessageToDaemon(kIncreaseKeyboardBacklight, 0, 0);
             break;
-        case kWMIEventScreenBacklightDown:
+        case kActionScreenBrightnessDown:
             adjustBrightness(false);
             break;
-        case kWMIEventScreenBacklightUp:
+        case kActionScreenBrightnessUp:
             adjustBrightness(true);
             break;
         default:
