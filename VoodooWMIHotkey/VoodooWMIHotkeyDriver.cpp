@@ -17,34 +17,37 @@ enum {
 IOService* VoodooWMIHotkeyDriver::probe(IOService* provider, SInt32* score) {
     IOService* result = super::probe(provider, score);
 
-    if (!(wmiController = OSDynamicCast(VoodooWMIController, provider))) {
-        return nullptr;
-    }
-    OSString* verifyGuid = OSDynamicCast(OSString, getProperty("VerifyGUID"));
-    if (!verifyGuid || !wmiController->hasGuid(verifyGuid->getCStringNoCopy())) {
-        IOLog("%s::verify event guid not found\n", getName());
-        return nullptr;
-    }
-    DEBUG_LOG("%s::find target event guid\n", getName());
+    // Type casting must succeed, guaranteed by IOKit, IOProviderClass.
+    wmiController = OSDynamicCast(VoodooWMIController, provider);
 
-    return result;
+    OSString* deviceUid = OSDynamicCast(OSString, provider->getProperty("WMI-UID"));
+
+    // Omit info.plist integrity check for the module itself.
+    OSDictionary* schemes = OSDynamicCast(OSDictionary, getProperty("Schemes"));
+    OSCollectionIterator* iterator = OSCollectionIterator::withCollection(schemes);
+    while (OSSymbol* key = OSDynamicCast(OSSymbol, iterator->getNextObject())) {
+        OSDictionary* scheme = OSDynamicCast(OSDictionary, schemes->getObject(key));
+        if (deviceUid && deviceUid->isEqualTo(OSDynamicCast(OSString, scheme->getObject("WMI-UID"))) &&
+            wmiController->hasGuid(OSDynamicCast(OSString, scheme->getObject("GUIDMatch"))->getCStringNoCopy())) {
+            IOLog("%s::find matched hotkey scheme: %s\n", getName(), key->getCStringNoCopy());
+            eventArray = OSDynamicCast(OSArray, scheme->getObject("WMIEvents"));
+            return result;
+        }
+    }
+
+    return nullptr;
 }
 
 bool VoodooWMIHotkeyDriver::start(IOService* provider) {
-    DEBUG_LOG("%s::start: called\n", getName());
     if (!super::start(provider)) {
         return false;
     }
 
-    eventArray = OSDynamicCast(OSArray, getProperty("WMIEvents"));
-    if (!eventArray) {
-        IOLog("%s failed to get WMIEvents property", getName());
-        return false;
-    }
+    // Validate event table
     for (int i = 0; i < eventArray->getCount(); i++) {
         OSDictionary* dict = OSDynamicCast(OSDictionary, eventArray->getObject(i));
         if (!dict) {
-            IOLog("%s failed to parse hotkey event %d", getName(), i);
+            IOLog("%s::failed to parse hotkey event %d", getName(), i);
             return false;
         }
         OSString* guid = OSDynamicCast(OSString, dict->getObject("GUID"));
@@ -52,7 +55,7 @@ bool VoodooWMIHotkeyDriver::start(IOService* provider) {
         OSNumber* eventId = OSDynamicCast(OSNumber, dict->getObject("EventData"));
         OSNumber* actionId = OSDynamicCast(OSNumber, dict->getObject("ActionID"));
         if (!guid || !notifyId || !eventId || !actionId) {
-            IOLog("%s parse hotkey event failed %d", getName(), i);
+            IOLog("%s::failed to parse hotkey event %d", getName(), i);
             return false;
         }
         wmiController->registerWMIEvent(guid->getCStringNoCopy(), this, OSMemberFunctionCast(WMIEventAction, this, &VoodooWMIHotkeyDriver::onWMIEvent));
@@ -64,7 +67,6 @@ bool VoodooWMIHotkeyDriver::start(IOService* provider) {
 }
 
 IOReturn VoodooWMIHotkeyDriver::setProperties(OSObject* properties) {
-    DEBUG_LOG("%s get property", getName());
     if (OSDictionary* dict = OSDynamicCast(OSDictionary, properties)) {
         if (OSCollectionIterator* i = OSCollectionIterator::withCollection(dict)) {
             while (OSSymbol* key = OSDynamicCast(OSSymbol, i->getNextObject())) {
@@ -100,8 +102,6 @@ void VoodooWMIHotkeyDriver::onWMIEvent(WMIBlock* block, OSObject* eventData) {
 }
 
 void VoodooWMIHotkeyDriver::stop(IOService* provider) {
-    DEBUG_LOG("%s::stop: called\n", getName());
-
     for (int i = 0; i < eventArray->getCount(); i++) {
         OSDictionary* dict = OSDynamicCast(OSDictionary, eventArray->getObject(i));
         OSString* guid = OSDynamicCast(OSString, dict->getObject("GUID"));

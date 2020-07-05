@@ -43,38 +43,41 @@
 			<string>${MODULE_NAME}</string>
 			<key>IOClass</key>
 			<string>VoodooWMIHotkeyDriver</string>
-			<key>IOPropertyMatch</key>
-			<dict>
-				<key>WMI-UID</key>
-				<string>1</string>
-			</dict>
 			<key>IOProviderClass</key>
 			<string>VoodooWMIController</string>
-			<key>VerifyGUID</key>
-			<string>ABBC0F72-8EA1-11D1-00A0-C90629100000</string>
-			<key>WMIEvents</key>
-			<array>
+			<key>Schemes</key>
+			<dict>
+				<key>Tongfang</key>
 				<dict>
-					<key>ActionID</key>
-					<integer>7</integer>
-					<key>EventData</key>
-					<integer>21</integer>
-					<key>GUID</key>
+					<key>WMI-UID</key>
+					<string>1</string>
+					<key>GUIDMatch</key>
 					<string>ABBC0F72-8EA1-11D1-00A0-C90629100000</string>
-					<key>NotifyID</key>
-					<integer>210</integer>
+					<key>WMIEvents</key>
+					<array>
+						<dict>
+							<key>ActionID</key>
+							<integer>7</integer>
+							<key>EventData</key>
+							<integer>21</integer>
+							<key>GUID</key>
+							<string>ABBC0F72-8EA1-11D1-00A0-C90629100000</string>
+							<key>NotifyID</key>
+							<integer>210</integer>
+						</dict>
+						<dict>
+							<key>ActionID</key>
+							<integer>8</integer>
+							<key>EventData</key>
+							<integer>20</integer>
+							<key>GUID</key>
+							<string>ABBC0F72-8EA1-11D1-00A0-C90629100000</string>
+							<key>NotifyID</key>
+							<integer>210</integer>
+						</dict>
+					</array>
 				</dict>
-				<dict>
-					<key>ActionID</key>
-					<integer>8</integer>
-					<key>EventData</key>
-					<integer>20</integer>
-					<key>GUID</key>
-					<string>ABBC0F72-8EA1-11D1-00A0-C90629100000</string>
-					<key>NotifyID</key>
-					<integer>210</integer>
-				</dict>
-			</array>
+			</dict>
 		</dict>
 	</dict>
 	<key>OSBundleLibraries</key>
