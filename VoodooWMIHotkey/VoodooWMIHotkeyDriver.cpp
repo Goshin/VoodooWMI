@@ -169,11 +169,13 @@ void VoodooWMIHotkeyDriver::adjustBrightness(bool increase) {
 void VoodooWMIHotkeyDriver::dispatchCommand(uint8_t id) {
     switch (id) {
         case kActionToggleAirplaneMode:
-            sendMessageToDaemon(kToggleWifi, 0, 0);
+            sendMessageToDaemon(kActionToggleAirplaneMode, 0, 0);
             break;
         case kActionKeyboardBacklightDown:
+            sendMessageToDaemon(kActionKeyboardBacklightUp, 0, 0);
+            break;
         case kActionKeyboardBacklightUp:
-            sendMessageToDaemon(kIncreaseKeyboardBacklight, 0, 0);
+            sendMessageToDaemon(kActionKeyboardBacklightUp, 0, 0);
             break;
         case kActionScreenBrightnessDown:
             adjustBrightness(false);

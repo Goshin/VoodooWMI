@@ -32,8 +32,6 @@ int IOBluetoothPreferenceGetControllerPowerState(void);
 
 static void *(*_BSDoGraphicWithMeterAndTimeout)(CGDirectDisplayID arg0, BSGraphic arg1, int arg2, float v, int timeout) = NULL;
 
-const int kMaxDisplays = 16;
-u_int32_t vendorID = 0;
 
 bool _loadBezelServices() {
     // Load BezelServices framework
@@ -218,22 +216,19 @@ void dispatchMessage(struct VoodooWMIHotkeyMessage *message) {
     printf("VoodooWMIHotkeyDaemon:: type:%d x:%d y:%d\n", message->type, message->arg1, message->arg2);
 
     switch (message->type) {
-        case kToggleWifi:
+        case kActionToggleAirplaneMode:
             toggleAirplaneMode();
             break;
-        case kSwitchDisplay:
+        case kActionSwitchScreen:
             switchDisplayMode();
             break;
-        case kDisableTouchpad:
-            showOSD(OSDGraphicKeyboardBacklightDisabledNotConnected, 0, 0);
+        case kActionToggleTouchpad:
+            toggleTouchpad();
             break;
-        case kEnableTouchpad:
-            showOSD(OSDGraphicKeyboardBacklightDisabledMeter, 0, 0);
-            break;
-        case kIncreaseKeyboardBacklight:
+        case kActionKeyboardBacklightDown:
             showOSD(OSDGraphicKeyboardBacklightMeter, 0, 0);
             break;
-        case kDecreaseKeyboardBacklight:
+        case kActionKeyboardBacklightUp:
             showOSD(OSDGraphicKeyboardBacklightMeter, 0, 0);
             break;
         default:
@@ -249,7 +244,7 @@ void kernelMessageLoop() {
 
     // struct for vendor code
     struct kev_vendor_code vendorCode = {0};
-    strncpy(vendorCode.vendor_string, "tongfang", KEV_VENDOR_CODE_MAX_STR_LEN);
+    strncpy(vendorCode.vendor_string, KERNEL_EVENT_VENDOR_ID, KEV_VENDOR_CODE_MAX_STR_LEN);
 
     // get vendor name -> vendor code mapping
     // ->vendor id, saved in 'vendorCode' variable

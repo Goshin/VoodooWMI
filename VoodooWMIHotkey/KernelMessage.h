@@ -4,13 +4,16 @@
 #define KERNEL_EVENT_CODE 0x8102
 #define KERNEL_EVENT_VENDOR_ID "VoodooWMI"
 
-enum {
-    kToggleWifi = 1,
-    kSwitchDisplay = 2,
-    kEnableTouchpad = 3,
-    kDisableTouchpad = 4,
-    kDecreaseKeyboardBacklight = 5,
-    kIncreaseKeyboardBacklight = 6,
+enum WMIHotkeyAction {
+    kActionSleep,
+    kActionLockScreen,
+    kActionSwitchScreen,
+    kActionToggleAirplaneMode,
+    kActionToggleTouchpad,
+    kActionKeyboardBacklightDown,
+    kActionKeyboardBacklightUp,
+    kActionScreenBrightnessDown,
+    kActionScreenBrightnessUp,
 };
 
 struct VoodooWMIHotkeyMessage {
