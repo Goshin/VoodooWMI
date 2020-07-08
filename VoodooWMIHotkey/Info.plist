@@ -24,18 +24,22 @@
 		<dict>
 			<key>CFBundleIdentifier</key>
 			<string>${MODULE_NAME}</string>
-			<key>Custom PS2 Map</key>
-			<array>
-				<string>&quot;76=64&quot;</string>
-			</array>
 			<key>IOClass</key>
 			<string>ACPIPS2NubProxy</string>
 			<key>IONameMatch</key>
-			<string>PNP0303</string>
+			<array>
+				<string>PNP0303</string>
+				<string>PNP030B</string>
+				<string>PNP0320</string>
+			</array>
 			<key>IOProviderClass</key>
 			<string>IOACPIPlatformDevice</string>
 			<key>LoadCustomKeymap</key>
-			<false/>
+			<true/>
+			<key>Custom PS2 Map</key>
+			<array>
+				<string>76=64</string>
+			</array>
 		</dict>
 		<key>VoodooWMIHotkeyDriver</key>
 		<dict>
@@ -45,7 +49,7 @@
 			<string>VoodooWMIHotkeyDriver</string>
 			<key>IOProviderClass</key>
 			<string>VoodooWMIController</string>
-			<key>Schemes</key>
+			<key>Platforms</key>
 			<dict>
 				<key>Tongfang</key>
 				<dict>
@@ -56,24 +60,64 @@
 					<key>WMIEvents</key>
 					<array>
 						<dict>
-							<key>ActionID</key>
-							<integer>7</integer>
-							<key>EventData</key>
-							<integer>21</integer>
 							<key>GUID</key>
 							<string>ABBC0F72-8EA1-11D1-00A0-C90629100000</string>
 							<key>NotifyID</key>
 							<integer>210</integer>
+							<key>EventData</key>
+							<integer>26</integer>
+							<key>ActionID</key>
+							<integer>3</integer>
+							<key>Note</key>
+							<string>Fn+F4 =&gt; Toggle airplane mode</string>
 						</dict>
 						<dict>
-							<key>ActionID</key>
-							<integer>8</integer>
-							<key>EventData</key>
-							<integer>20</integer>
 							<key>GUID</key>
 							<string>ABBC0F72-8EA1-11D1-00A0-C90629100000</string>
 							<key>NotifyID</key>
 							<integer>210</integer>
+							<key>EventData</key>
+							<integer>27</integer>
+							<key>ActionID</key>
+							<integer>3</integer>
+							<key>Note</key>
+							<string>Fn+F4 =&gt; Toggle airplane mode</string>
+						</dict>
+						<dict>
+							<key>GUID</key>
+							<string>ABBC0F72-8EA1-11D1-00A0-C90629100000</string>
+							<key>NotifyID</key>
+							<integer>210</integer>
+							<key>EventData</key>
+							<integer>240</integer>
+							<key>ActionID</key>
+							<integer>6</integer>
+							<key>Note</key>
+							<string>Fn+F6, F7 =&gt; Keyboard backlight</string>
+						</dict>
+						<dict>
+							<key>GUID</key>
+							<string>ABBC0F72-8EA1-11D1-00A0-C90629100000</string>
+							<key>NotifyID</key>
+							<integer>210</integer>
+							<key>EventData</key>
+							<integer>21</integer>
+							<key>ActionID</key>
+							<integer>7</integer>
+							<key>Note</key>
+							<string>Fn+F11 =&gt; Screen brightness down</string>
+						</dict>
+						<dict>
+							<key>GUID</key>
+							<string>ABBC0F72-8EA1-11D1-00A0-C90629100000</string>
+							<key>NotifyID</key>
+							<integer>210</integer>
+							<key>EventData</key>
+							<integer>20</integer>
+							<key>ActionID</key>
+							<integer>8</integer>
+							<key>Note</key>
+							<string>Fn+F12 =&gt; Screen brightness up</string>
 						</dict>
 					</array>
 				</dict>

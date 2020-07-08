@@ -23,14 +23,16 @@ IOService* VoodooWMIHotkeyDriver::probe(IOService* provider, SInt32* score) {
     OSString* deviceUid = OSDynamicCast(OSString, provider->getProperty("WMI-UID"));
 
     // Omit info.plist integrity check for the module itself.
-    OSDictionary* schemes = OSDynamicCast(OSDictionary, getProperty("Schemes"));
-    OSCollectionIterator* iterator = OSCollectionIterator::withCollection(schemes);
+    OSDictionary* platforms = OSDynamicCast(OSDictionary, getProperty("Platforms"));
+    OSCollectionIterator* iterator = OSCollectionIterator::withCollection(platforms);
     while (OSSymbol* key = OSDynamicCast(OSSymbol, iterator->getNextObject())) {
-        OSDictionary* scheme = OSDynamicCast(OSDictionary, schemes->getObject(key));
-        if (deviceUid && deviceUid->isEqualTo(OSDynamicCast(OSString, scheme->getObject("WMI-UID"))) &&
-            wmiController->hasGuid(OSDynamicCast(OSString, scheme->getObject("GUIDMatch"))->getCStringNoCopy())) {
+        OSDictionary* platform = OSDynamicCast(OSDictionary, platforms->getObject(key));
+        if (deviceUid && deviceUid->isEqualTo(OSDynamicCast(OSString, platform->getObject("WMI-UID"))) &&
+            wmiController->hasGuid(OSDynamicCast(OSString, platform->getObject("GUIDMatch"))->getCStringNoCopy())) {
             IOLog("%s::find matched hotkey scheme: %s\n", getName(), key->getCStringNoCopy());
-            eventArray = OSDynamicCast(OSArray, scheme->getObject("WMIEvents"));
+            eventArray = OSDynamicCast(OSArray, platform->getObject("WMIEvents"));
+            setProperty(key, platform);
+            removeProperty("Platforms");
             return result;
         }
     }
