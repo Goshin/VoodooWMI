@@ -1,5 +1,7 @@
 #include "VoodooWMIController.hpp"
 
+#define DEBUG_LOG(args...) do { if (this->debug) IOLog(args); } while(0)
+
 typedef IOService super;
 OSDefineMetaClassAndStructors(VoodooWMIController, IOService)
 
@@ -32,7 +34,7 @@ static int wmi_gtoa(const char* in, char* out) {
 IOService* VoodooWMIController::probe(IOService* provider, SInt32* score) {
     IOService* result = super::probe(provider, score);
 
-    IOACPIPlatformDevice* device = OSDynamicCast(IOACPIPlatformDevice, provider);
+    device = OSDynamicCast(IOACPIPlatformDevice, provider);
     if (!device || device->validateObject("_WDG") != kIOReturnSuccess) {
         return nullptr;
     }
@@ -45,9 +47,7 @@ bool VoodooWMIController::start(IOService* provider) {
         return false;
     }
 
-    if (!(device = OSDynamicCast(IOACPIPlatformDevice, provider))) {
-        return false;
-    }
+    debug = OSDynamicCast(OSBoolean, getProperty("DebugMode"))->getValue();
 
     if (!loadBlocks()) {
         return false;
@@ -70,14 +70,14 @@ IOReturn VoodooWMIController::message(UInt32 type, IOService* provider, void* ar
     if (type != kIOACPIMessageDeviceNotification || !argument) {
         return kIOReturnSuccess;
     }
-    DEBUG_LOG("%s::message(%x, %s, %x)\n", getName(), type, provider->getName(), *reinterpret_cast<unsigned*>(argument));
+    DEBUG_LOG("%s::message(%s, 0x%x)\n", getName(), provider->getName(), *reinterpret_cast<unsigned*>(argument));
 
     UInt8 notifyId = *reinterpret_cast<unsigned*>(argument);
     OSObject* eventData = nullptr;
     if (getEventData(notifyId, &eventData) != kIOReturnSuccess) {
-        IOLog("%s failed to get event data", getName());
+        DEBUG_LOG("%s failed to get event data", getName());
     } else if (OSNumber* eventID = OSDynamicCast(OSNumber, eventData)) {
-        IOLog("%s event: notify id %02X, data %x", getName(), notifyId, eventID->unsigned32BitValue());
+        DEBUG_LOG("%s event: (NotifyID 0x%02x, EventData 0x%x)", getName(), notifyId, eventID->unsigned32BitValue());
     }
 
     WMIBlock* targetBlock = nullptr;
@@ -88,13 +88,13 @@ IOReturn VoodooWMIController::message(UInt32 type, IOService* provider, void* ar
         }
     }
     if (targetBlock == nullptr) {
-        IOLog("%s unknown event, no matched block found", getName());
+        DEBUG_LOG("%s::unknown event, no matched block found", getName());
         return kIOReturnSuccess;
     }
 
     WMIEventHandler* handler = &handlerList[targetBlock - blockList];
     if (handler->action == nullptr) {
-        IOLog("%s unknown event, not registered", getName());
+        DEBUG_LOG("%s::unknown event, not registered", getName());
         return kIOReturnSuccess;
     }
     handler->action(handler->target, targetBlock, eventData);
@@ -108,14 +108,12 @@ bool VoodooWMIController::loadBlocks() {
         return false;
     }
 
-    setProperty("Raw WDG", result);
-
     OSData* blocksData = OSDynamicCast(OSData, result);
     if (blocksData == nullptr) {
         return false;
     }
     int dataLength = blocksData->getLength();
-    IOLog("%s block size %ld, %d", getName(), sizeof(WMIBlock), dataLength);
+    DEBUG_LOG("%s::block size %d", getName(), dataLength);
     if (dataLength % sizeof(WMIBlock) != 0) {
         return false;
     }
@@ -130,37 +128,42 @@ bool VoodooWMIController::loadBlocks() {
     }
     memcpy(blockList, blocksData->getBytesNoCopy(), dataLength);
 
-    OSArray* array = OSArray::withCapacity(blockCount);
-    for (int i = 0; i < blockCount; i++) {
-        WMIBlock* block = &blockList[i];
-        OSDictionary* dict = OSDictionary::withCapacity(6);
+    if (debug) {
+        // log blocks in property
+        setProperty("Raw WDG", result);
+        OSArray* array = OSArray::withCapacity(blockCount);
+        for (int i = 0; i < blockCount; i++) {
+            WMIBlock* block = &blockList[i];
+            OSDictionary* dict = OSDictionary::withCapacity(6);
 
-        char guid[37];
-        wmi_gtoa(block->guid, guid);
-        dict->setObject("GUID", OSString::withCString(guid));
-
-        char objID[3] = {0};
-        memcpy(objID, block->objectId, 2);
-        dict->setObject("ObjectID", OSString::withCString(objID));
-
-        dict->setObject("NotifyID", OSNumber::withNumber(block->notifyId, 8));
-        dict->setObject("Reserved", OSNumber::withNumber(block->reserved, 8));
-        dict->setObject("Instance", OSNumber::withNumber(block->instanceCount, 8));
-        dict->setObject("Flags", OSNumber::withNumber(block->flags, 8));
-
-        array->setObject(dict);
-        dict->release();
-    }
-    setProperty("WMI-Blocks", array);
-    array->release();
-
-    for (int i = 0; i < blockCount; i++) {
-        WMIBlock* block = &blockList[i];
-        if (block->flags & ACPI_WMI_EVENT) {
             char guid[37];
             wmi_gtoa(block->guid, guid);
-            IOReturn result = setEventEnable(guid, true);
-            IOLog("%s debug enable event %s %02x", getName(), guid, result);
+            dict->setObject("GUID", OSString::withCString(guid));
+
+            char objID[3] = {0};
+            memcpy(objID, block->objectId, 2);
+            dict->setObject("ObjectID", OSString::withCString(objID));
+
+            dict->setObject("NotifyID", OSNumber::withNumber(block->notifyId, 8));
+            dict->setObject("Reserved", OSNumber::withNumber(block->reserved, 8));
+            dict->setObject("Instance", OSNumber::withNumber(block->instanceCount, 8));
+            dict->setObject("Flags", OSNumber::withNumber(block->flags, 8));
+
+            array->setObject(dict);
+            dict->release();
+        }
+        setProperty("WMI-Blocks", array);
+        array->release();
+
+        // enable all WMI events for debugging
+        for (int i = 0; i < blockCount; i++) {
+            WMIBlock* block = &blockList[i];
+            if (block->flags & ACPI_WMI_EVENT) {
+                char guid[37];
+                wmi_gtoa(block->guid, guid);
+                setEventEnable(guid, true);
+                DEBUG_LOG("%s::debug: enable event %s", getName(), guid);
+            }
         }
     }
 
@@ -173,11 +176,10 @@ WMIBlock* VoodooWMIController::findBlock(const char* guid) {
         char matchingGuid[37];
         wmi_gtoa(block->guid, matchingGuid);
         if (strcmp(guid, matchingGuid) == 0) {
-            IOLog("%s block found %s", getName(), guid);
             return block;
         }
     }
-    IOLog("%s block not found", getName());
+    DEBUG_LOG("%s::block not found %s", getName(), guid);
     return nullptr;
 }
 

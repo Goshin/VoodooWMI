@@ -3,32 +3,12 @@
 
 #include <IOKit/IOService.h>
 #include "VoodooWMIController.hpp"
+#include "KernelMessage.h"
 
-#ifndef EXPORT
-#define EXPORT __attribute__((visibility("default")))
-#endif
-
-#define DEBUG_MSG
-#ifdef DEBUG_MSG
-#define DEBUG_LOG(args...)  IOLog(args)
-#else
-#define DEBUG_LOG(args...)
-#endif
-
-enum WMIHotkeyAction {
-    kActionSleep,
-    kActionLockScreen,
-    kActionSwitchScreen,
-    kActionToggleAirplaneMode,
-    kActionToggleTouchpad,
-    kActionKeyboardBacklightDown,
-    kActionKeyboardBacklightUp,
-    kActionScreenBrightnessDown,
-    kActionScreenBrightnessUp,
-};
-
-class EXPORT VoodooWMIHotkeyDriver : public IOService {
+class VoodooWMIHotkeyDriver : public IOService {
     OSDeclareDefaultStructors(VoodooWMIHotkeyDriver)
+
+    bool debug = false;
 
     VoodooWMIController* wmiController = nullptr;
     OSArray* eventArray = nullptr;

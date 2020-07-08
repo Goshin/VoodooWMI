@@ -5,6 +5,8 @@ extern "C" {
 #include "KernelMessage.h"
 }
 
+#define DEBUG_LOG(args...) do { if (this->debug) IOLog(args); } while(0)
+
 typedef IOService super;
 OSDefineMetaClassAndStructors(VoodooWMIHotkeyDriver, IOService)
 
@@ -44,6 +46,8 @@ bool VoodooWMIHotkeyDriver::start(IOService* provider) {
     if (!super::start(provider)) {
         return false;
     }
+
+    debug = OSDynamicCast(OSBoolean, getProperty("DebugMode"))->getValue();
 
     // Validate event table
     for (int i = 0; i < eventArray->getCount(); i++) {
@@ -90,7 +94,7 @@ void VoodooWMIHotkeyDriver::onWMIEvent(WMIBlock* block, OSObject* eventData) {
     if (OSNumber* numberObj = OSDynamicCast(OSNumber, eventData)) {
         obtainedEventData = numberObj->unsigned32BitValue();
     }
-    DEBUG_LOG("%s::onWMIEvent (%02X, %02X)\n", getName(), block->notifyId, obtainedEventData);
+    DEBUG_LOG("%s::onWMIEvent (0X%02X, 0X%02X)\n", getName(), block->notifyId, obtainedEventData);
 
     for (int i = 0; i < eventArray->getCount(); i++) {
         OSDictionary* dict = OSDynamicCast(OSDictionary, eventArray->getObject(i));

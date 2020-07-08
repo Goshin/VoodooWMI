@@ -30,6 +30,8 @@
 			<string>PNP0C14</string>
 			<key>IOProviderClass</key>
 			<string>IOACPIPlatformDevice</string>
+			<key>DebugMode</key>
+			<false/>
 		</dict>
 	</dict>
 	<key>OSBundleCompatibleVersion</key>

@@ -4,13 +4,6 @@
 #include <IOKit/IOService.h>
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
 
-#define DEBUG_MSG
-#ifdef DEBUG_MSG
-#define DEBUG_LOG(args...)  IOLog(args)
-#else
-#define DEBUG_LOG(args...)
-#endif
-
 /*
  * If the GUID data block is marked as expensive, we must enable and
  * explicitily disable data collection.
@@ -42,6 +35,8 @@ struct WMIEventHandler {
 
 class VoodooWMIController : public IOService {
     OSDeclareDefaultStructors(VoodooWMIController)
+
+    bool debug = false;
 
     IOACPIPlatformDevice* device = nullptr;
     WMIBlock* blockList = nullptr;

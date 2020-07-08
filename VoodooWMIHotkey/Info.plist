@@ -49,6 +49,8 @@
 			<string>VoodooWMIHotkeyDriver</string>
 			<key>IOProviderClass</key>
 			<string>VoodooWMIController</string>
+			<key>DebugMode</key>
+			<false/>
 			<key>Platforms</key>
 			<dict>
 				<key>Tongfang</key>
