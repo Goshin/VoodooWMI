@@ -1,6 +1,6 @@
 #include "VoodooWMIController.hpp"
 
-#define DEBUG_LOG(args...) do { if (this->debug) IOLog(args); } while(0)
+#define DEBUG_LOG(args...) do { if (this->debug) IOLog(args); } while (0)
 
 typedef IOService super;
 OSDefineMetaClassAndStructors(VoodooWMIController, IOService)
@@ -218,11 +218,11 @@ IOReturn VoodooWMIController::setBlockEnable(const char* guid, bool enabled) {
     return device->evaluateObject(methodName, nullptr, argumentList, 1);
 }
 
-bool VoodooWMIController::hasGuid(const char* guid){
+bool VoodooWMIController::hasGuid(const char* guid) {
     return (findBlock(guid) != nullptr);
 }
 
-IOReturn VoodooWMIController::getEventData(UInt8 notifyId, OSObject** result){
+IOReturn VoodooWMIController::getEventData(UInt8 notifyId, OSObject** result) {
     char methodName[5] = "_WED";
 
     OSNumber* argument = OSNumber::withNumber(notifyId, 8);
@@ -230,7 +230,7 @@ IOReturn VoodooWMIController::getEventData(UInt8 notifyId, OSObject** result){
     return device->evaluateObject(methodName, result, argumentList, 1);
 }
 
-IOReturn VoodooWMIController::registerWMIEvent(const char* guid, OSObject* target, WMIEventAction handler){
+IOReturn VoodooWMIController::registerWMIEvent(const char* guid, OSObject* target, WMIEventAction handler) {
     WMIBlock* block = nullptr;
     if (!(block = findBlock(guid))) {
         return kIOReturnNotFound;
@@ -245,7 +245,7 @@ IOReturn VoodooWMIController::registerWMIEvent(const char* guid, OSObject* targe
     return setEventEnable(guid, true);
 }
 
-IOReturn VoodooWMIController::unregisterWMIEvent(const char* guid){
+IOReturn VoodooWMIController::unregisterWMIEvent(const char* guid) {
     WMIBlock* block = nullptr;
     if (!(block = findBlock(guid))) {
         return kIOReturnNotFound;

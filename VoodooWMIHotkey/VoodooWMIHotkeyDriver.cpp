@@ -5,7 +5,7 @@ extern "C" {
 #include "KernelMessage.h"
 }
 
-#define DEBUG_LOG(args...) do { if (this->debug) IOLog(args); } while(0)
+#define DEBUG_LOG(args...) do { if (this->debug) IOLog(args); } while (0)
 
 typedef IOService super;
 OSDefineMetaClassAndStructors(VoodooWMIHotkeyDriver, IOService)
