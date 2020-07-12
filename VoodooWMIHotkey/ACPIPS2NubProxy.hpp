@@ -4,18 +4,11 @@
 #include <IOKit/IOService.h>
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
 
-#define DEBUG_MSG
-#ifdef DEBUG_MSG
-#define DEBUG_LOG(args...)  IOLog(args)
-#else
-#define DEBUG_LOG(args...)
-#endif
-
-#define PS2K_DEVICE_NAME "PNP0303"
-
 /* An ACPI device proxy to inject a key map for VoodooPS2 keyboard driver */
 class ACPIPS2NubProxy : public IOACPIPlatformDevice {
     OSDeclareDefaultStructors(ACPIPS2NubProxy)
+
+    bool debug = false;
 
  public:
     IOService* probe(IOService* provider, SInt32* score) override;

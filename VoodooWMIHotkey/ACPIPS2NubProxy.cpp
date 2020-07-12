@@ -11,7 +11,8 @@ DefineReservedUnused(IOPlatformDevice, 1);
 DefineReservedUnused(IOPlatformDevice, 2);
 DefineReservedUnused(IOPlatformDevice, 3);
 
-#define DEBUG_TITLE "TongfangKeyboardUtility::ACPIPS2NubProxy"
+#define DEBUG_TITLE "VoodooWMIHotkey::ACPIPS2NubProxy"
+#define DEBUG_LOG(args...) do { if (this->debug) IOLog(args); } while (0)
 
 IOService* ACPIPS2NubProxy::probe(IOService* provider, SInt32* score) {
     static bool probed = false;
@@ -21,10 +22,8 @@ IOService* ACPIPS2NubProxy::probe(IOService* provider, SInt32* score) {
     IOService* result = super::probe(provider, score);
 
     DEBUG_LOG("%s::probe: called\n", DEBUG_TITLE);
-    if (OSBoolean* loadCustomKeymapProperty = OSDynamicCast(OSBoolean, getProperty("LoadCustomKeymap"))) {
-        if (!loadCustomKeymapProperty->getValue()) {
-            return nullptr;
-        }
+    if (!OSDynamicCast(OSBoolean, getProperty("LoadCustomKeymap"))->getValue()) {
+        return nullptr;
     }
     if (result) {
         probed = true;
@@ -40,6 +39,7 @@ bool ACPIPS2NubProxy::start(IOService* provider) {
         return false;
     }
 
+    debug = OSDynamicCast(OSBoolean, getProperty("DebugMode"))->getValue();
     setProperty("Note", "This nub is for ACPI object injection");
 
     OSArray* controllers = OSDynamicCast(OSArray, provider->getProperty(gIOInterruptControllersKey));
@@ -50,7 +50,12 @@ bool ACPIPS2NubProxy::start(IOService* provider) {
     setProperty(gIOInterruptControllersKey, controllers);
     setProperty(gIOInterruptSpecifiersKey, specifiers);
 
-    setName(PS2K_DEVICE_NAME);
+    if (OSData* compatible = OSDynamicCast(OSData, provider->getProperty("compatible"))) {
+        setName((const char*)compatible->getBytesNoCopy());
+    } else {
+        return false;
+    }
+
     registerService();
 
     return true;
@@ -70,14 +75,13 @@ IOReturn ACPIPS2NubProxy::getResources(void) {
 }
 
 IOReturn ACPIPS2NubProxy::message(UInt32 type, IOService* provider, void* argument) {
-    DEBUG_LOG("%s::message: type %x called\n", DEBUG_TITLE, type);
-    if (!argument) {
-        return messageClients(type);
+    if (OSIterator* iterator = getClientIterator()) {
+        while (IOService* service = OSDynamicCast(IOService, iterator->getNextObject())) {
+            service->message(type, provider, argument);
+        }
+        iterator->release();
     }
-    if (type == kIOACPIMessageDeviceNotification) {
-        DEBUG_LOG("%s::message(%x, %x)\n", DEBUG_TITLE, type, *reinterpret_cast<unsigned*>(argument));
-    }
-    return messageClients(type, argument, sizeof(UInt32));
+    return kIOReturnSuccess;
 }
 
 IOReturn ACPIPS2NubProxy::validateObject(const OSSymbol* objectName) {
@@ -146,8 +150,10 @@ OSObject* ACPIPS2NubProxy::injectKeymap() {
 
     DEBUG_LOG("%s::evaluateObject: inject RMCF\n", DEBUG_TITLE);
 
-    setProperty("dict", dict);
-    setProperty("encoded dict", encodeObjToArray(dict));
+    if (debug) {
+        setProperty("Dict", dict);
+        setProperty("Encoded-Dict", encodeObjToArray(dict));
+    }
 
     return result;
 }
