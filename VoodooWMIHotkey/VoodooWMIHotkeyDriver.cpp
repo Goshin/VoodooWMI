@@ -22,15 +22,12 @@ IOService* VoodooWMIHotkeyDriver::probe(IOService* provider, SInt32* score) {
     // Type casting must succeed, guaranteed by IOKit, IOProviderClass.
     wmiController = OSDynamicCast(VoodooWMIController, provider);
 
-    OSString* deviceUid = OSDynamicCast(OSString, provider->getProperty("WMI-UID"));
-
     // Omit info.plist integrity check for the module itself.
     OSDictionary* platforms = OSDynamicCast(OSDictionary, getProperty("Platforms"));
     OSCollectionIterator* iterator = OSCollectionIterator::withCollection(platforms);
     while (OSSymbol* key = OSDynamicCast(OSSymbol, iterator->getNextObject())) {
         OSDictionary* platform = OSDynamicCast(OSDictionary, platforms->getObject(key));
-        if (deviceUid && deviceUid->isEqualTo(OSDynamicCast(OSString, platform->getObject("WMI-UID"))) &&
-            wmiController->hasGuid(OSDynamicCast(OSString, platform->getObject("GUIDMatch"))->getCStringNoCopy())) {
+        if (wmiController->hasGuid(OSDynamicCast(OSString, platform->getObject("GUIDMatch"))->getCStringNoCopy())) {
             IOLog("%s::find matched hotkey scheme: %s\n", getName(), key->getCStringNoCopy());
             eventArray = OSDynamicCast(OSArray, platform->getObject("WMIEvents"));
             setProperty(key, platform);

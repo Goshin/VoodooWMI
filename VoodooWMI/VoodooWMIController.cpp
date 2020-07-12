@@ -53,7 +53,6 @@ bool VoodooWMIController::start(IOService* provider) {
         return false;
     }
 
-    setProperty("WMI-UID", provider->getProperty("_UID"));
     registerService();
 
     return true;
