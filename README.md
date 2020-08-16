@@ -20,8 +20,9 @@ This project also includes a generic Fn hotkey driver based on WMI protocol.
 The hotkey implementation is platform-specific. `VoodooWMIHotkey.kext` has a default hotkey scheme for Tongfang ODM model that might not work for you.
 You can easily add a hotkey scheme for your laptop model in `VoodooWMIHotkey.kext/Contents/info.plist`, check out the tutorial in wiki pages.
 
-## Credits
+## Credits & References
 
+- Linux acpi-wmi platform driver: [linux/drivers/platform/x86/wmi.c](https://github.com/torvalds/linux/blob/master/drivers/platform/x86/wmi.c)
 - @hieplpvip for the fancy daemon in [AsusSMC](https://github.com/hieplpvip/AsusSMC).
 
 ## License
