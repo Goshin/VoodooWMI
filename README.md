@@ -1,21 +1,8 @@
-# TongfangKeyboardUtility
+# VoodooWMI
 
-A WMI platform driver for Fn hotkeys functionality on Tongfang 8/9th gen laptop ODM models.
+A WMI (Windows Management Instrumentation) platform driver for macOS.
+This project also includes a generic Fn hotkey driver based on WMI protocol.
 
-*No DSDT patch needed.*
-
-## Fn Key Features
-
-| Fn + Fx  | Function                             | Note                   |
-| -------- | ------------------------------------ | ---------------------- |
-| F1       | Sleep                                | -                      |
-| F2       | Lock LGUI Key                        | -                      |
-| F3       | Switch Screen Mirroring/Extended     | Open display settings |
-| F4       | Toggle WiFi                          | -                      |
-| F5       | Toggle Touchpad                      | VoodooPS2 required for remapping dead key |
-| F6, F7   | Increase/Decrease Keyboard Backlight | -                      |
-| F8 - F10 | Adjust Volume                        | -                      |
-| F11, F12 | Adjust Screen Backlight              | By sending F14, F15 |
 
 ## Usage
 
@@ -25,8 +12,13 @@ A WMI platform driver for Fn hotkeys functionality on Tongfang 8/9th gen laptop 
 
 ### Installation
 
-1. Install the kernel extension `TongfangKeyboardUtility.kext`.
-3. Install the OSD daemon with `install_daemon.sh`.
+1. Install the kernel extension `VoodooWMI.kext` and `VoodooWMIHotkey.kext`.
+2. Install the OSD daemon with `install_daemon.sh`.
+
+### Add a hotkey scheme
+
+The hotkey implementation is platform-specific. `VoodooWMIHotkey.kext` has a default hotkey scheme for Tongfang ODM model that might not work for you.
+You can easily add a hotkey scheme for your laptop model in `VoodooWMIHotkey.kext/Contents/info.plist`, check out the tutorial in wiki pages.
 
 ## Credits
 
