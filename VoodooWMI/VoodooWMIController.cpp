@@ -73,10 +73,11 @@ IOReturn VoodooWMIController::message(UInt32 type, IOService* provider, void* ar
 
     UInt8 notifyId = *reinterpret_cast<unsigned*>(argument);
     OSObject* eventData = nullptr;
+    int eventDataNum = 0;
     if (getEventData(notifyId, &eventData) != kIOReturnSuccess) {
         DEBUG_LOG("%s failed to get event data", getName());
     } else if (OSNumber* eventID = OSDynamicCast(OSNumber, eventData)) {
-        DEBUG_LOG("%s event: (NotifyID 0x%02x, EventData 0x%x)", getName(), notifyId, eventID->unsigned32BitValue());
+        eventDataNum = eventID->unsigned32BitValue();
     }
 
     WMIBlock* targetBlock = nullptr;
@@ -87,9 +88,13 @@ IOReturn VoodooWMIController::message(UInt32 type, IOService* provider, void* ar
         }
     }
     if (targetBlock == nullptr) {
-        DEBUG_LOG("%s::unknown event, no matched block found", getName());
+        DEBUG_LOG("%s::unknown event, no matched block found (NotifyID: 0x%02x, EventData: 0x%x)", getName(), notifyId, eventDataNum);
         return kIOReturnSuccess;
     }
+
+    char guid[37];
+    wmi_gtoa(targetBlock->guid, guid);
+    DEBUG_LOG("%s event: GUID: %s, NotifyID: 0x%02x, EventData: 0x%x", getName(), guid, notifyId, eventDataNum);
 
     WMIEventHandler* handler = &handlerList[targetBlock - blockList];
     if (handler->action == nullptr) {
