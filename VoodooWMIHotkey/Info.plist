@@ -35,9 +35,9 @@
 			<key>IOProviderClass</key>
 			<string>IOACPIPlatformDevice</string>
 			<key>DebugMode</key>
-			<false/>
-			<key>LoadCustomKeymap</key>
 			<true/>
+			<key>LoadCustomKeymap</key>
+			<false/>
 			<key>Custom PS2 Map</key>
 			<array>
 				<string>76=64</string>
@@ -52,7 +52,7 @@
 			<key>IOProviderClass</key>
 			<string>VoodooWMIController</string>
 			<key>DebugMode</key>
-			<false/>
+			<true/>
 			<key>Platforms</key>
 			<dict>
 				<key>Tongfang</key>
