@@ -2,6 +2,7 @@
 #define __VOODOOWMI_HOTKEY_DRIVER__
 
 #include <IOKit/IOService.h>
+#include <IOKit/hidevent/IOHIDEventService.h>
 #include "VoodooWMIController.hpp"
 #include "KernelMessage.h"
 

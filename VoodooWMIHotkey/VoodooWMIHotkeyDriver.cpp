@@ -151,16 +151,26 @@ void VoodooWMIHotkeyDriver::toggleTouchpad(bool enable) {
 }
 
 void VoodooWMIHotkeyDriver::adjustBrightness(bool increase) {
-    if (IOService* keyboardDevice = OSDynamicCast(IOService, IORegistryEntry::fromPath("IOService:/AppleACPIPlatformExpert/PS2K"))) {
-        if (IOService* keyboardDriver = keyboardDevice->getClient()) {
-            DEBUG_LOG("%s::get keyboard device\n", getName());
-            unsigned keyCode = increase ? 0x0406 : 0x0405;
-            keyboardDriver->message(kIOACPIMessageDeviceNotification, this, &keyCode);
-        }
-        keyboardDevice->release();
+    OSDictionary* serviceMatch = serviceMatching("IOHIDEventService");
+    if (IOService* hidEventService = waitForMatchingService(serviceMatch, 1e9)) {
+        DEBUG_LOG("%s::get HID event service\n", getName());
+
+        const unsigned int DISPATCH_KEY_EVENT_METHOD_INDEX = 281;
+        void** vtable = *(void***)hidEventService;
+        typedef void(*dispatchKeyboardEventMethod)(void* self, AbsoluteTime timeStamp, UInt32 usagePage, UInt32 usage, UInt32 value, IOOptionBits options);
+        dispatchKeyboardEventMethod method = (dispatchKeyboardEventMethod)vtable[DISPATCH_KEY_EVENT_METHOD_INDEX];
+
+        AbsoluteTime timestamp;
+        clock_get_uptime(&timestamp);
+        UInt32 keyCode = increase ? kHIDUsage_KeyboardF15 : kHIDUsage_KeyboardF14;
+        method(hidEventService, timestamp, kHIDPage_KeyboardOrKeypad, keyCode, true, 0);
+        method(hidEventService, timestamp, kHIDPage_KeyboardOrKeypad, keyCode, false, 0);
+
+        hidEventService->release();
     } else {
-        DEBUG_LOG("%s failed to get keyboard device", getName());
+        DEBUG_LOG("%s failed to get HID event service", getName());
     }
+    serviceMatch->release();
 }
 
 void VoodooWMIHotkeyDriver::dispatchCommand(uint8_t id) {

@@ -130,11 +130,15 @@
 	<dict>
 		<key>com.apple.iokit.IOACPIFamily</key>
 		<string>1.0d1</string>
+		<key>com.apple.iokit.IOHIDFamily</key>
+		<string>1.0.0b1</string>
 		<key>com.apple.kpi.bsd</key>
 		<string>8.0.0</string>
 		<key>com.apple.kpi.iokit</key>
 		<string>9.0.0</string>
 		<key>com.apple.kpi.libkern</key>
+		<string>9.0.0</string>
+		<key>com.apple.kpi.mach</key>
 		<string>9.0.0</string>
 		<key>io.github.goshin.VoodooWMI</key>
 		<string>1.0</string>
