@@ -51,7 +51,7 @@ bool VoodooWMIHotkeyDriver::start(IOService* provider) {
         OSDictionary* dict = OSDynamicCast(OSDictionary, eventArray->getObject(i));
         if (!dict) {
             IOLog("%s::failed to parse hotkey event %d", getName(), i);
-            return false;
+            continue;
         }
         OSString* guid = OSDynamicCast(OSString, dict->getObject("GUID"));
         OSNumber* notifyId = OSDynamicCast(OSNumber, dict->getObject("NotifyID"));
@@ -59,7 +59,7 @@ bool VoodooWMIHotkeyDriver::start(IOService* provider) {
         OSNumber* actionId = OSDynamicCast(OSNumber, dict->getObject("ActionID"));
         if (!guid || !notifyId || !eventId || !actionId) {
             IOLog("%s::failed to parse hotkey event %d", getName(), i);
-            return false;
+            continue;
         }
         wmiController->registerWMIEvent(guid->getCStringNoCopy(), this, OSMemberFunctionCast(WMIEventAction, this, &VoodooWMIHotkeyDriver::onWMIEvent));
     }
