@@ -26,7 +26,7 @@ class VoodooWMIHotkeyDriver : public IOService {
     void sendMessageToDaemon(int type, int arg1, int arg2);
     void dispatchCommand(uint8_t id);
 
-    void toggleTouchpad(bool enable);
+    int8_t toggleTouchpad();
     void adjustBrightness(bool increase);
 
     bool sendKernelMessage(const char *vendorCode, uint32_t eventCode, int arg1, int arg2, int arg3);

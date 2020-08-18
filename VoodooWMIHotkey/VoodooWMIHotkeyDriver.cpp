@@ -76,7 +76,7 @@ IOReturn VoodooWMIHotkeyDriver::setProperties(OSObject* properties) {
                 if (key->isEqualTo("Touchpad")) {
                     if (OSBoolean* value = OSDynamicCast(OSBoolean, dict->getObject(key))) {
                         DEBUG_LOG("%s::setProperties %s = %x\n", getName(), key->getCStringNoCopy(), value->getValue());
-                        toggleTouchpad(value->getValue());
+                        toggleTouchpad();
                     }
                 }
             }
@@ -136,18 +136,27 @@ void VoodooWMIHotkeyDriver::sendMessageToDaemon(int type, int arg1, int arg2) {
     kev_msg_post(&kernelEventMsg);
 }
 
-void VoodooWMIHotkeyDriver::toggleTouchpad(bool enable) {
+int8_t VoodooWMIHotkeyDriver::toggleTouchpad() {
+    int8_t isEnabled = -1;
     const OSSymbol* key = OSSymbol::withCString("RM,deliverNotifications");
     OSDictionary* serviceMatch = propertyMatching(key, kOSBooleanTrue);
-    if (IOService* touchpadDevice = waitForMatchingService(serviceMatch, 1e9)) {
-        DEBUG_LOG("%s::get touchpad service\n", getName());
-        touchpadDevice->message(kKeyboardSetTouchStatus, this, &enable);
-        touchpadDevice->release();
+    if (OSIterator* iterator = getMatchingServices(serviceMatch)) {
+        while (IOService* candidateService = OSDynamicCast(IOService, iterator->getNextObject())) {
+            candidateService->message(kKeyboardGetTouchStatus, this, &isEnabled);
+            if (isEnabled != -1) {
+                DEBUG_LOG("%s::get touchpad service: %s\n", getName(), candidateService->getMetaClass()->getClassName());
+                isEnabled = !isEnabled;
+                candidateService->message(kKeyboardSetTouchStatus, this, &isEnabled);
+                break;
+            }
+        }
+        iterator->release();
     } else {
         DEBUG_LOG("%s failed to get touchpad service", getName());
     }
     key->release();
     serviceMatch->release();
+    return isEnabled;
 }
 
 void VoodooWMIHotkeyDriver::adjustBrightness(bool increase) {
@@ -183,6 +192,8 @@ void VoodooWMIHotkeyDriver::dispatchCommand(uint8_t id) {
             break;
         case kActionKeyboardBacklightUp:
             sendMessageToDaemon(kActionKeyboardBacklightUp, 0, 0);
+        case kActionToggleTouchpad:
+            toggleTouchpad();
             break;
         case kActionScreenBrightnessDown:
             adjustBrightness(false);
