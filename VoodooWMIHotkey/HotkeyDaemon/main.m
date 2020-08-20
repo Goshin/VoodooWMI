@@ -27,8 +27,10 @@ extern OSStatus MDSendAppleEventToSystemProcess(AEEventID eventToSend);
 extern void RunApplicationEventLoop(void);
 
 // requires IOBluetooth.framework
-void IOBluetoothPreferenceSetControllerPowerState(int);
-int IOBluetoothPreferenceGetControllerPowerState(void);
+extern void IOBluetoothPreferenceSetControllerPowerState(int);
+extern int IOBluetoothPreferenceGetControllerPowerState(void);
+
+void dispatchMessage(struct VoodooWMIHotkeyMessage *message);
 
 static void *(*_BSDoGraphicWithMeterAndTimeout)(CGDirectDisplayID arg0, BSGraphic arg1, int arg2, float v, int timeout) = NULL;
 
@@ -141,47 +143,48 @@ void switchDisplayMode() {
     [[NSWorkspace sharedWorkspace] openURL:url];
 }
 
-void setTouchpadProperty(bool isEnabled) {
+int sendMessageToDriver(struct VoodooWMIHotkeyMessage message) {
     io_service_t service = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("VoodooWMIHotkeyDriver"));
     if (service == IO_OBJECT_NULL) {
         printf("VoodooWMIHotkeyDaemon:: could not find any services matching\n");
-        return;
+        return -1;
     }
-    kern_return_t ret = IORegistryEntrySetCFProperty(service, CFSTR("Touchpad"), isEnabled ? kCFBooleanTrue : kCFBooleanFalse);
-    if (ret != KERN_SUCCESS) {
-        printf("VoodooWMIHotkeyDaemon:: could not set property: %x\n", ret);
+    io_connect_t connection;
+    int output = -1;
+    if (IOServiceOpen(service, mach_task_self(), 0, &connection) == KERN_SUCCESS) {
+        size_t outputSize = sizeof(int);
+        IOConnectCallStructMethod(connection, kClientSelectorDispatchCommand, &message, sizeof(struct VoodooWMIHotkeyMessage), &output, &outputSize);
+
+        IOServiceClose(connection);
     }
     IOObjectRelease(service);
+    return output;
 }
 
 void toggleTouchpad() {
-    static bool isEnabled = true;
-    isEnabled = !isEnabled;
-    if (isEnabled) {
-        showOSD(OSDGraphicKeyboardBacklightDisabledMeter, 0, 0);
-    } else {
-        showOSD(OSDGraphicKeyboardBacklightDisabledNotConnected, 0, 0);
+    struct VoodooWMIHotkeyMessage message = {.type = kActionToggleTouchpad};
+    int result = sendMessageToDriver(message);
+    if (result != -1) {
+        if (result) {
+            showOSD(OSDGraphicKeyboardBacklightDisabledMeter, 0, 0);
+        } else {
+            showOSD(OSDGraphicKeyboardBacklightDisabledNotConnected, 0, 0);
+        }
     }
-    setTouchpadProperty(isEnabled);
 }
 
 OSStatus onHotKeyEvent(EventHandlerCallRef nextHandler, EventRef theEvent, void *userData) {
     EventHotKeyID eventId;
     GetEventParameter(theEvent, kEventParamDirectObject, typeEventHotKeyID, NULL, sizeof(eventId), NULL, &eventId);
 
-    switch (eventId.id) {
-        case 1:
-            printf("VoodooWMIHotkeyDaemon:: Fn+F3\n");
-            switchDisplayMode();
-            break;
-        case 2:
-            printf("VoodooWMIHotkeyDaemon:: Fn+F5\n");
-            toggleTouchpad();
-            break;
-        default:
-            printf("VoodooWMIHotkeyDaemon:: Unknown Command\n");
-            break;
-    }
+    union {
+        unsigned int integer;
+        unsigned char byte[4];
+    } signature;
+    signature.integer = eventId.signature;
+    printf("VoodooWMIHotkeyDaemon:: onHotKeyEvent %c%c%c%c\n", signature.byte[3], signature.byte[2], signature.byte[1], signature.byte[0]);
+    struct VoodooWMIHotkeyMessage message = {.type = eventId.id};
+    dispatchMessage(&message);
 
     return noErr;
 }
@@ -196,12 +199,12 @@ void registerHotKeys() {
     InstallApplicationEventHandler(&onHotKeyEvent, 1, &eventType, NULL, NULL);
 
     eventHotKeyID.signature = 'FnF3';
-    eventHotKeyID.id = 1;
+    eventHotKeyID.id = kActionSwitchScreen;
     // Opt + P
     RegisterEventHotKey(0x23, optionKey, eventHotKeyID, GetApplicationEventTarget(), 0, &eventHotKeyRef);
 
     eventHotKeyID.signature = 'FnF5';
-    eventHotKeyID.id = 2;
+    eventHotKeyID.id = kActionToggleTouchpad;
     // Ctrl + Opt + F13
     RegisterEventHotKey(0x69, controlKey | optionKey, eventHotKeyID, GetApplicationEventTarget(), 0, &eventHotKeyRef);
     // Ctrl + Cmd + F13
@@ -216,6 +219,12 @@ void dispatchMessage(struct VoodooWMIHotkeyMessage *message) {
     printf("VoodooWMIHotkeyDaemon:: type:%d x:%d y:%d\n", message->type, message->arg1, message->arg2);
 
     switch (message->type) {
+        case kActionScreenBrightnessDown:
+        case kActionScreenBrightnessUp:
+            sendMessageToDriver(*message);
+            break;
+        case kActionSleep:
+            goToSleep();
         case kActionToggleAirplaneMode:
             toggleAirplaneMode();
             break;

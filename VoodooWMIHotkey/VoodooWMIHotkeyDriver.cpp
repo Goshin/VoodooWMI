@@ -7,8 +7,8 @@ extern "C" {
 
 #define DEBUG_LOG(args...) do { if (this->debug) IOLog(args); } while (0)
 
-typedef IOService super;
 OSDefineMetaClassAndStructors(VoodooWMIHotkeyDriver, IOService)
+OSDefineMetaClassAndStructors(VoodooWMIHotkeyUserClient, IOUserClient)
 
 enum {
     kKeyboardSetTouchStatus = iokit_vendor_specific_msg(100),  // set disable/enable touchpad (data is bool*)
@@ -69,23 +69,6 @@ bool VoodooWMIHotkeyDriver::start(IOService* provider) {
     return true;
 }
 
-IOReturn VoodooWMIHotkeyDriver::setProperties(OSObject* properties) {
-    if (OSDictionary* dict = OSDynamicCast(OSDictionary, properties)) {
-        if (OSCollectionIterator* i = OSCollectionIterator::withCollection(dict)) {
-            while (OSSymbol* key = OSDynamicCast(OSSymbol, i->getNextObject())) {
-                if (key->isEqualTo("Touchpad")) {
-                    if (OSBoolean* value = OSDynamicCast(OSBoolean, dict->getObject(key))) {
-                        DEBUG_LOG("%s::setProperties %s = %x\n", getName(), key->getCStringNoCopy(), value->getValue());
-                        toggleTouchpad();
-                    }
-                }
-            }
-            i->release();
-        }
-    }
-    return kIOReturnSuccess;
-}
-
 void VoodooWMIHotkeyDriver::onWMIEvent(WMIBlock* block, OSObject* eventData) {
     int obtainedEventData = 0;
     if (OSNumber* numberObj = OSDynamicCast(OSNumber, eventData)) {
@@ -114,7 +97,7 @@ void VoodooWMIHotkeyDriver::stop(IOService* provider) {
     super::stop(provider);
 }
 
-void VoodooWMIHotkeyDriver::sendMessageToDaemon(int type, int arg1, int arg2) {
+void VoodooWMIHotkeyDriver::sendMessageToDaemon(int type, int arg1 = 0, int arg2 = 0) {
     struct kev_msg kernelEventMsg = {0};
 
     uint32_t vendorID = 0;
@@ -182,18 +165,18 @@ void VoodooWMIHotkeyDriver::adjustBrightness(bool increase) {
     serviceMatch->release();
 }
 
-void VoodooWMIHotkeyDriver::dispatchCommand(uint8_t id) {
+int VoodooWMIHotkeyDriver::dispatchCommand(uint8_t id) {
     switch (id) {
+        case kActionSleep:
+        case kActionLockScreen:
+        case kActionSwitchScreen:
         case kActionToggleAirplaneMode:
-            sendMessageToDaemon(kActionToggleAirplaneMode, 0, 0);
-            break;
-        case kActionKeyboardBacklightDown:
-            sendMessageToDaemon(kActionKeyboardBacklightUp, 0, 0);
-            break;
         case kActionKeyboardBacklightUp:
-            sendMessageToDaemon(kActionKeyboardBacklightUp, 0, 0);
+        case kActionKeyboardBacklightDown:
+            sendMessageToDaemon(id);
+            break;
         case kActionToggleTouchpad:
-            toggleTouchpad();
+            return toggleTouchpad();
             break;
         case kActionScreenBrightnessDown:
             adjustBrightness(false);
@@ -202,6 +185,32 @@ void VoodooWMIHotkeyDriver::dispatchCommand(uint8_t id) {
             adjustBrightness(true);
             break;
         default:
-            break;
+            return -1;
     }
+    return 0;
+}
+
+IOReturn VoodooWMIHotkeyUserClient::externalMethod(uint32_t selector,
+                                                   IOExternalMethodArguments* arguments,
+                                                   IOExternalMethodDispatch* dispatch,
+                                                   OSObject* target,
+                                                   void* reference) {
+    VoodooWMIHotkeyDriver* driver = OSDynamicCast(VoodooWMIHotkeyDriver, getProvider());
+    if (!driver) {
+        return kIOReturnError;
+    }
+
+    if (selector == kClientSelectorDispatchCommand) {
+        const VoodooWMIHotkeyMessage* input = static_cast<const VoodooWMIHotkeyMessage*>(arguments->structureInput);
+        *static_cast<int*>(arguments->structureOutput) = driver->dispatchCommand(input->type);
+        return kIOReturnSuccess;
+    }
+    return kIOReturnNotFound;
+}
+
+IOReturn VoodooWMIHotkeyUserClient::clientClose() {
+    if (!isInactive()) {
+        terminate();
+    }
+    return kIOReturnSuccess;
 }

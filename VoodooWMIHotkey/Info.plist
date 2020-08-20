@@ -51,6 +51,8 @@
 			<string>VoodooWMIHotkeyDriver</string>
 			<key>IOProviderClass</key>
 			<string>VoodooWMIController</string>
+			<key>IOUserClientClass</key>
+			<string>VoodooWMIHotkeyUserClient</string>
 			<key>DebugMode</key>
 			<true/>
 			<key>Platforms</key>

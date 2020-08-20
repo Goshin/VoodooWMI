@@ -22,4 +22,8 @@ struct VoodooWMIHotkeyMessage {
     int arg2;
 };
 
+enum IOUserClientSelectorCode {
+    kClientSelectorDispatchCommand,
+};
+
 #endif /* KernelMessage_h */
