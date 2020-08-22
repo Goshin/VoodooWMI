@@ -138,12 +138,7 @@ OSStatus onHotKeyEvent(EventHandlerCallRef nextHandler, EventRef theEvent, void 
     EventHotKeyID eventId;
     GetEventParameter(theEvent, kEventParamDirectObject, typeEventHotKeyID, NULL, sizeof(eventId), NULL, &eventId);
 
-    union {
-        unsigned int integer;
-        unsigned char byte[4];
-    } signature;
-    signature.integer = eventId.signature;
-    printf("VoodooWMIHotkeyDaemon:: onHotKeyEvent %c%c%c%c\n", signature.byte[3], signature.byte[2], signature.byte[1], signature.byte[0]);
+    printf("VoodooWMIHotkeyDaemon:: onHotKeyEvent: ActionID %d\n", eventId.id);
     struct VoodooWMIHotkeyMessage message = {.type = eventId.id};
     dispatchMessage(&message);
 
@@ -159,21 +154,34 @@ void registerHotKeys() {
 
     InstallApplicationEventHandler(&onHotKeyEvent, 1, &eventType, NULL, NULL);
 
-    eventHotKeyID.signature = 'FnF3';
-    eventHotKeyID.id = kActionSwitchScreen;
-    // Opt + P
-    RegisterEventHotKey(0x23, optionKey, eventHotKeyID, GetApplicationEventTarget(), 0, &eventHotKeyRef);
-
-    eventHotKeyID.signature = 'FnF5';
-    eventHotKeyID.id = kActionToggleTouchpad;
-    // Ctrl + Opt + F13
-    RegisterEventHotKey(0x69, controlKey | optionKey, eventHotKeyID, GetApplicationEventTarget(), 0, &eventHotKeyRef);
-    // Ctrl + Cmd + F13
-    RegisterEventHotKey(0x69, controlKey | cmdKey, eventHotKeyID, GetApplicationEventTarget(), 0, &eventHotKeyRef);
-    // Opt + Cmd + F13
-    RegisterEventHotKey(0x69, optionKey | cmdKey, eventHotKeyID, GetApplicationEventTarget(), 0, &eventHotKeyRef);
-
-    printf("VoodooWMIHotkeyDaemon:: Register HotKeys\n");
+    io_service_t service = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("VoodooWMIHotkeyDriver"));
+    if (service == IO_OBJECT_NULL) {
+        printf("VoodooWMIHotkeyDaemon:: could not find any services matching\n");
+        return;
+    }
+    CFTypeRef platform_dict_ref = IORegistryEntryCreateCFProperty(service, CFSTR("Platform"), kCFAllocatorDefault, 0);
+    if (platform_dict_ref) {
+        CFTypeRef events_array_ref;
+        if (CFDictionaryGetValueIfPresent(platform_dict_ref, CFSTR("PlainHotkeys"), &events_array_ref)) {
+            for (int i = 0; i < CFArrayGetCount(events_array_ref); i++) {
+                CFTypeRef event_dict_ref = CFArrayGetValueAtIndex(events_array_ref, i);
+                CFTypeRef keycode_num_ref = CFDictionaryGetValue(event_dict_ref, CFSTR("KeyCode"));
+                CFTypeRef modifiers_num_ref = CFDictionaryGetValue(event_dict_ref, CFSTR("Modifiers"));
+                CFTypeRef action_num_ref = CFDictionaryGetValue(event_dict_ref, CFSTR("ActionID"));
+                CFTypeRef note_string_ref = CFDictionaryGetValue(event_dict_ref, CFSTR("Note"));
+                uint32_t keycode, modifiers, action_id;
+                CFNumberGetValue(keycode_num_ref, kCFNumberIntType, &keycode);
+                CFNumberGetValue(modifiers_num_ref, kCFNumberIntType, &modifiers);
+                CFNumberGetValue(action_num_ref, kCFNumberIntType, &action_id);
+                printf("VoodooWMIHotkeyDaemon:: Registering Hotkey: (key: 0x%x, mod: 0x%x, action: 0x%x) %s\n",
+                       keycode, modifiers, action_id, CFStringGetCStringPtr(note_string_ref, 0));
+                eventHotKeyID.id = action_id;
+                RegisterEventHotKey(keycode, modifiers, eventHotKeyID, GetApplicationEventTarget(), 0, &eventHotKeyRef);
+            }
+        }
+        CFRelease(platform_dict_ref);
+    }
+    IOObjectRelease(service);
 }
 
 void dispatchMessage(struct VoodooWMIHotkeyMessage *message) {

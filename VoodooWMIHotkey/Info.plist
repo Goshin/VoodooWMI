@@ -124,6 +124,29 @@
 							<string>Fn+F12 =&gt; Screen brightness up</string>
 						</dict>
 					</array>
+					<key>PlainHotkeys</key>
+					<array>
+						<dict>
+							<key>KeyCode</key>
+							<integer>35</integer>
+							<key>Modifiers</key>
+							<integer>2048</integer>
+							<key>ActionID</key>
+							<integer>2</integer>
+							<key>Note</key>
+							<string>Fn+F3 =&gt; Opt + P =&gt; Switch Screen Mode</string>
+						</dict>
+						<dict>
+							<key>KeyCode</key>
+							<integer>105</integer>
+							<key>Modifiers</key>
+							<integer>6144</integer>
+							<key>ActionID</key>
+							<integer>4</integer>
+							<key>Note</key>
+							<string>Fn+F5 =&gt; Ctrl + Opt + F13 =&gt; Toggle Touchpad</string>
+						</dict>
+					</array>
 				</dict>
 			</dict>
 		</dict>

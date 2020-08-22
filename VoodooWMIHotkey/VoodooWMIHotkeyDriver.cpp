@@ -31,7 +31,9 @@ IOService* VoodooWMIHotkeyDriver::probe(IOService* provider, SInt32* score) {
         if (wmiController->hasGuid(OSDynamicCast(OSString, platform->getObject("GUIDMatch"))->getCStringNoCopy())) {
             IOLog("%s::find matched hotkey scheme: %s\n", getName(), key->getCStringNoCopy());
             eventArray = OSDynamicCast(OSArray, platform->getObject("WMIEvents"));
-            setProperty(key, platform);
+            OSDictionary* matchedPlatform = OSDictionary::withDictionary(platform);
+            matchedPlatform->setObject("Name", key);
+            setProperty("Platform", matchedPlatform);
             removeProperty("Platforms");
             return result;
         }
