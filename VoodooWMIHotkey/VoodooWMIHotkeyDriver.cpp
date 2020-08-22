@@ -1,4 +1,5 @@
 #include "VoodooWMIHotkeyDriver.hpp"
+#include <IOKit/pwr_mgt/RootDomain.h>
 
 extern "C" {
 #include <sys/kern_event.h>
@@ -165,15 +166,23 @@ void VoodooWMIHotkeyDriver::adjustBrightness(bool increase) {
     serviceMatch->release();
 }
 
+void VoodooWMIHotkeyDriver::sleep() {
+    if (IOPMrootDomain* rootDomain = getPMRootDomain()) {
+        rootDomain->receivePowerNotification(kIOPMSleepNow);
+    }
+}
+
 int VoodooWMIHotkeyDriver::dispatchCommand(uint8_t id) {
     switch (id) {
-        case kActionSleep:
         case kActionLockScreen:
         case kActionSwitchScreen:
         case kActionToggleAirplaneMode:
         case kActionKeyboardBacklightUp:
         case kActionKeyboardBacklightDown:
             sendMessageToDaemon(id);
+            break;
+        case kActionSleep:
+            sleep();
             break;
         case kActionToggleTouchpad:
             return toggleTouchpad();

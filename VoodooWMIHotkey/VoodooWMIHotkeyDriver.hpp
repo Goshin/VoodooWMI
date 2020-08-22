@@ -31,6 +31,7 @@ class VoodooWMIHotkeyDriver : public IOService {
 
     int8_t toggleTouchpad();
     void adjustBrightness(bool increase);
+    void sleep();
 
     bool sendKernelMessage(const char *vendorCode, uint32_t eventCode, int arg1, int arg2, int arg3);
 };

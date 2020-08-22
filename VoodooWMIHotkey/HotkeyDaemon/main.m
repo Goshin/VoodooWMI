@@ -16,13 +16,6 @@
 #import "OSD.h"
 #import "KernelMessage.h"
 
-/*
- *    kAERestart        will cause system to restart
- *    kAEShutDown       will cause system to shutdown
- *    kAEReallyLogout   will cause system to logout
- *    kAESleep          will cause system to sleep
- */
-extern OSStatus MDSendAppleEventToSystemProcess(AEEventID eventToSend);
 
 extern void RunApplicationEventLoop(void);
 
@@ -51,35 +44,6 @@ bool _loadOSDFramework() {
     return [[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/OSD.framework"] load];
 }
 
-OSStatus MDSendAppleEventToSystemProcess(AEEventID eventToSendID) {
-    AEAddressDesc targetDesc;
-    static const ProcessSerialNumber kPSNOfSystemProcess = {0, kSystemProcess };
-    AppleEvent eventReply = {typeNull, NULL};
-    AppleEvent eventToSend = {typeNull, NULL};
-
-    OSStatus status = AECreateDesc(typeProcessSerialNumber, &kPSNOfSystemProcess, sizeof(kPSNOfSystemProcess), &targetDesc);
-
-    if (status != noErr)
-        return status;
-
-    status = AECreateAppleEvent(kCoreEventClass, eventToSendID, &targetDesc, kAutoGenerateReturnID, kAnyTransactionID, &eventToSend);
-
-    AEDisposeDesc(&targetDesc);
-
-    if (status != noErr)
-        return status;
-
-    status = AESendMessage(&eventToSend, &eventReply, kAENormalPriority, kAEDefaultTimeout);
-
-    AEDisposeDesc(&eventToSend);
-
-    if (status != noErr)
-        return status;
-
-    AEDisposeDesc(&eventReply);
-    return status;
-}
-
 void showBezelServices(BSGraphic image, float filled) {
     CGDirectDisplayID currentDisplayId = [NSScreen.mainScreen.deviceDescription[@"NSScreenNumber"] unsignedIntValue];
     _BSDoGraphicWithMeterAndTimeout(currentDisplayId, image, 0x0, filled, 1);
@@ -103,16 +67,6 @@ void showKBoardBLightStatus(int level, int max) {
             showOSD(OSDGraphicKeyboardBacklightMeter, level, max);
         else
             showOSD(OSDGraphicKeyboardBacklightDisabledMeter, level, max);
-    }
-}
-
-void goToSleep() {
-    if (_BSDoGraphicWithMeterAndTimeout != NULL) {  // El Capitan and probably older systems
-        MDSendAppleEventToSystemProcess(kAESleep);
-    } else {
-        // Sierra+
-        CGDirectDisplayID currentDisplayId = [NSScreen.mainScreen.deviceDescription[@"NSScreenNumber"] unsignedIntValue];
-        [[NSClassFromString(@"OSDManager") sharedManager] showImage:OSDGraphicSleep onDisplayID:currentDisplayId priority:OSDPriorityDefault msecUntilFade:1000];
     }
 }
 
@@ -141,6 +95,13 @@ void switchDisplayMode() {
     // open last Privacy subpane viewed:
     NSURL * url = [NSURL fileURLWithPath:@"/System/Library/PreferencePanes/Displays.prefPane"];
     [[NSWorkspace sharedWorkspace] openURL:url];
+}
+
+void lockScreen() {
+    void *lib = dlopen("/System/Library/PrivateFrameworks/login.framework/Versions/Current/login", RTLD_LAZY);
+    void (*SACLockScreenImmediate)(void) = dlsym(lib, "SACLockScreenImmediate");
+
+    SACLockScreenImmediate();
 }
 
 int sendMessageToDriver(struct VoodooWMIHotkeyMessage message) {
@@ -219,12 +180,14 @@ void dispatchMessage(struct VoodooWMIHotkeyMessage *message) {
     printf("VoodooWMIHotkeyDaemon:: type:%d x:%d y:%d\n", message->type, message->arg1, message->arg2);
 
     switch (message->type) {
+        case kActionSleep:
         case kActionScreenBrightnessDown:
         case kActionScreenBrightnessUp:
             sendMessageToDriver(*message);
             break;
-        case kActionSleep:
-            goToSleep();
+        case kActionLockScreen:
+            lockScreen();
+            break;
         case kActionToggleAirplaneMode:
             toggleAirplaneMode();
             break;
